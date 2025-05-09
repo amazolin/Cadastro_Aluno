@@ -1,4 +1,4 @@
-package br.edu.fatec.gru.dao;
+package br.edu.fatecgru.dao;
 
 public class AlunoDAO {
 			//
