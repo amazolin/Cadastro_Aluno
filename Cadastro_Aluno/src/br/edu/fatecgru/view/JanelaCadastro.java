@@ -548,7 +548,6 @@ public class JanelaCadastro extends JFrame {
 		for(int i = 0; i <disciplina.length; i++) {
 			modelo.addRow(new Object[] {disciplina[i],nota[i], " "});
 			}
-		modelo.addRow(disciplina);
 		modelo.addRow(nota);*/
 		
 		JButton btnNewButton = new JButton("Gerar PDF");
