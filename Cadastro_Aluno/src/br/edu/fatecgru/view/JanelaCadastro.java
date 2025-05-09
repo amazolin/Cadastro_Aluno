@@ -40,22 +40,22 @@ public class JanelaCadastro extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_7;
+	private JTextField txtNomeD;
+	private JTextField txtRgmD;
+	private JTextField txtDataD;
+	private JTextField txtCpfD;
+	private JTextField txtEmailD;
+	private JTextField txtEnderecoD;
+	private JTextField txtMuniD;
+	private JTextField txtTeleD;
 	private JTextField txtRGM_Notas;
 	private JTextField textField_8;
 	private JTextField textField_9;
 	private JTextField textField_10;
-	private JTextField nomeB;
-	private JTextField semB;
-	private JTextField curB;
-	private JTable Bol_table;
+	private JTextField txtNomeB;
+	private JTextField txtSemB;
+	private JTextField txtCursoB;
+	private JTable table_Boletim;
 
 	/**
 	 * Launch the application.
@@ -189,60 +189,60 @@ public class JanelaCadastro extends JFrame {
 		lblNewLabel_1.setBounds(354, 34, 46, 14);
 		panelDadosPessoais.add(lblNewLabel_1);
 		
-		textField = new JTextField();
-		textField.setBounds(91, 31, 244, 20);
-		panelDadosPessoais.add(textField);
-		textField.setColumns(10);
+		txtNomeD = new JTextField();
+		txtNomeD.setBounds(91, 31, 244, 20);
+		panelDadosPessoais.add(txtNomeD);
+		txtNomeD.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(392, 31, 150, 20);
-		panelDadosPessoais.add(textField_1);
+		txtRgmD = new JTextField();
+		txtRgmD.setColumns(10);
+		txtRgmD.setBounds(392, 31, 150, 20);
+		panelDadosPessoais.add(txtRgmD);
 		
 		JLabel lblNewLabel_2 = new JLabel("Data de Nascimento:");
 		lblNewLabel_2.setBounds(30, 82, 118, 14);
 		panelDadosPessoais.add(lblNewLabel_2);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(155, 79, 150, 20);
-		panelDadosPessoais.add(textField_2);
-		textField_2.setColumns(10);
+		txtDataD = new JTextField();
+		txtDataD.setBounds(155, 79, 150, 20);
+		panelDadosPessoais.add(txtDataD);
+		txtDataD.setColumns(10);
 		
 		JLabel lblNewLabel_3 = new JLabel("CPF:");
 		lblNewLabel_3.setBounds(328, 82, 46, 14);
 		panelDadosPessoais.add(lblNewLabel_3);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(371, 79, 171, 20);
-		panelDadosPessoais.add(textField_3);
+		txtCpfD = new JTextField();
+		txtCpfD.setColumns(10);
+		txtCpfD.setBounds(371, 79, 171, 20);
+		panelDadosPessoais.add(txtCpfD);
 		
 		JLabel lblNewLabel_4 = new JLabel("Email:");
 		lblNewLabel_4.setBounds(30, 136, 46, 14);
 		panelDadosPessoais.add(lblNewLabel_4);
 		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(91, 133, 451, 20);
-		panelDadosPessoais.add(textField_4);
+		txtEmailD = new JTextField();
+		txtEmailD.setColumns(10);
+		txtEmailD.setBounds(91, 133, 451, 20);
+		panelDadosPessoais.add(txtEmailD);
 		
 		JLabel lblNewLabel_5 = new JLabel("Endereço:");
 		lblNewLabel_5.setBounds(30, 191, 68, 14);
 		panelDadosPessoais.add(lblNewLabel_5);
 		
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
-		textField_5.setBounds(91, 188, 451, 20);
-		panelDadosPessoais.add(textField_5);
+		txtEnderecoD = new JTextField();
+		txtEnderecoD.setColumns(10);
+		txtEnderecoD.setBounds(91, 188, 451, 20);
+		panelDadosPessoais.add(txtEnderecoD);
 		
 		JLabel lblNewLabel_6 = new JLabel("Município:");
 		lblNewLabel_6.setBounds(30, 249, 55, 14);
 		panelDadosPessoais.add(lblNewLabel_6);
 		
-		textField_6 = new JTextField();
-		textField_6.setBounds(91, 246, 125, 20);
-		panelDadosPessoais.add(textField_6);
-		textField_6.setColumns(10);
+		txtMuniD = new JTextField();
+		txtMuniD.setBounds(91, 246, 125, 20);
+		panelDadosPessoais.add(txtMuniD);
+		txtMuniD.setColumns(10);
 		
 		JLabel lblNewLabel_7 = new JLabel("UF:");
 		lblNewLabel_7.setBounds(237, 249, 25, 14);
@@ -253,18 +253,18 @@ public class JanelaCadastro extends JFrame {
 			    "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN",
 			    "RS", "RO", "RR", "SC", "SP", "SE", "TO"
 			};
-		JComboBox comboBox = new JComboBox<>(estados);
-		comboBox.setBounds(264, 245, 54, 22);
-		panelDadosPessoais.add(comboBox);
+		JComboBox comboUFD = new JComboBox<>(estados);
+		comboUFD.setBounds(264, 245, 54, 22);
+		panelDadosPessoais.add(comboUFD);
 		
 		JLabel lblNewLabel_8 = new JLabel("Telefone:");
 		lblNewLabel_8.setBounds(341, 249, 46, 14);
 		panelDadosPessoais.add(lblNewLabel_8);
 		
-		textField_7 = new JTextField();
-		textField_7.setBounds(397, 246, 145, 20);
-		panelDadosPessoais.add(textField_7);
-		textField_7.setColumns(10);
+		txtTeleD = new JTextField();
+		txtTeleD.setBounds(397, 246, 145, 20);
+		panelDadosPessoais.add(txtTeleD);
+		txtTeleD.setColumns(10);
 		
 		//Tela Curso
 		JPanel panelCurso = new JPanel();
@@ -504,35 +504,35 @@ public class JanelaCadastro extends JFrame {
 		lblNewLabel_17.setBounds(351, 2, 46, 14);
 		panelBoletim.add(lblNewLabel_17);
 		
-		nomeB = new JTextField();
-		nomeB.setEditable(false);
-		nomeB.setBounds(20, 21, 319, 20);
-		panelBoletim.add(nomeB);
-		nomeB.setColumns(10);
+		txtNomeB = new JTextField();
+		txtNomeB.setEditable(false);
+		txtNomeB.setBounds(20, 21, 319, 20);
+		panelBoletim.add(txtNomeB);
+		txtNomeB.setColumns(10);
 		
 		JLabel lblNewLabel_18 = new JLabel("Semestre");
 		lblNewLabel_18.setBounds(20, 47, 57, 14);
 		panelBoletim.add(lblNewLabel_18);
 		
-		semB = new JTextField();
-		semB.setEditable(false);
-		semB.setBounds(20, 64, 95, 20);
-		panelBoletim.add(semB);
-		semB.setColumns(10);
+		txtSemB = new JTextField();
+		txtSemB.setEditable(false);
+		txtSemB.setBounds(20, 64, 95, 20);
+		panelBoletim.add(txtSemB);
+		txtSemB.setColumns(10);
 		
 		JLabel lblNewLabel_19 = new JLabel("Curso");
 		lblNewLabel_19.setBounds(129, 47, 35, 14);
 		panelBoletim.add(lblNewLabel_19);
 		
-		curB = new JTextField();
-		curB.setEditable(false);
-		curB.setBounds(129, 64, 210, 20);
-		panelBoletim.add(curB);
-		curB.setColumns(10);
+		txtCursoB = new JTextField();
+		txtCursoB.setEditable(false);
+		txtCursoB.setBounds(129, 64, 210, 20);
+		panelBoletim.add(txtCursoB);
+		txtCursoB.setColumns(10);
 		
-		Bol_table = new JTable();
-		Bol_table.setBounds(10, 101, 552, 226);
-		panelBoletim.add(Bol_table);
+		table_Boletim = new JTable();
+		table_Boletim.setBounds(10, 101, 552, 226);
+		panelBoletim.add(table_Boletim);
 		
 		// Criando o modelo ( colunas ) da tabela
 		DefaultTableModel modelo = new DefaultTableModel();
@@ -541,7 +541,7 @@ public class JanelaCadastro extends JFrame {
 		modelo.addColumn("Faltas");
 		
 		// Atribuindo o modelo a tabela
-		Bol_table.setModel(modelo);
+		table_Boletim.setModel(modelo);
 		
 		/* Adicionando as linhas
 		modelo.addRow(new Object[] {"Disciplinas", "Notas", "Faltas"});
@@ -551,17 +551,17 @@ public class JanelaCadastro extends JFrame {
 			
 		modelo.addRow(nota);*/
 		
-		JButton btnNewButton = new JButton("Gerar PDF");
-		btnNewButton.setBounds(467, 63, 95, 23);
-		panelBoletim.add(btnNewButton);
+		JButton btnPdfB = new JButton("Gerar PDF");
+		btnPdfB.setBounds(467, 63, 95, 23);
+		panelBoletim.add(btnPdfB);
 		
-		JButton btnNewButton_1 = new JButton("Pesquisar");
-		btnNewButton_1.setBounds(351, 63, 95, 23);
-		panelBoletim.add(btnNewButton_1);
+		JButton btnPesquisarB = new JButton("Pesquisar");
+		btnPesquisarB.setBounds(351, 63, 95, 23);
+		panelBoletim.add(btnPesquisarB);
 		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(351, 20, 210, 22);
-		panelBoletim.add(comboBox_1);
+		JComboBox comboRGMB = new JComboBox();
+		comboRGMB.setBounds(351, 20, 210, 22);
+		panelBoletim.add(comboRGMB);
 		
 		
 		
