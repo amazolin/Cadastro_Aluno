@@ -1,5 +1,45 @@
 package br.edu.fatecgru.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import br.edu.fatecgru.model.Aluno;
+import br.edu.fatecgru.util.ConnectionFactory;
+
+
 public class AlunoDAO {
-			// Metodos de Java para o Banco
+	// Metodos de Java para o Banco
+	private Connection conn;	// Conecta ao BD
+	private PreparedStatement ps;	// Permite SQL
+	private ResultSet rs;	// Uma Table
+	private Aluno aluno;
+	
+	public LeitorDao() throws Exception{
+		/*
+		 * Chama a classe ConnectionFactory e estabelece uma conexão
+		 */
+		
+		try {
+			this.conn = ConnectionFactory.getConnection();
+		} catch (Exception e) {
+			throw new Exception("erro: \n" + e.getMessage());
+		}
+	}
+	
+	// Método Salvar
+	
+	public void salvar(Aluno aluno) throws Exception {
+		if (aluno == null) {
+			throw new Exception("O nome não pode ser nulo");
+		}
+		try {
+			String SQL = "INSERT INTO tbAluno (RGM, Nome, Endereco, UF, Municipio, Telefone)"
+			ps = conn.prepareStatement(SQL);
+			ps.setString(1, aluno.getRGM());
+			ps.setString(2,)
+		}
+	}
+	
 }
