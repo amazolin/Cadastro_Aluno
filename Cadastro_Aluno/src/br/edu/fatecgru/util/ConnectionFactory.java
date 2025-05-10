@@ -1,5 +1,9 @@
 package br.edu.fatecgru.util;
 
-public class ConnectionFactory {
+import java.sql.*;
 
+public class ConnectionFactory {
+	//public static Connection getConnection() throws Exception{
+		
+	//}
 }
