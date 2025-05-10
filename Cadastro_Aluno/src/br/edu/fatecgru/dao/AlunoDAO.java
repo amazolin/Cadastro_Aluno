@@ -31,13 +31,24 @@ public class AlunoDAO {
 	// Método Salvar Tela Curso
 	
 	public void salvar(Aluno aluno) throws Exception {
+	    // Verificação inicial de dados essenciais
 	    if (aluno == null || aluno.getNome() == null || aluno.getNome().isEmpty()) {
 	        throw new Exception("O nome não pode ser nulo ou vazio");
 	    }
-	    try {
-	        String SQL = "INSERT INTO tbaluno (Nome, RGM, DataNasc, CPF, Email, Endereco, Municipio, UF, Telefone, Curso, Campus, Periodo, Disciplina) "
-	                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	        ps = conn.prepareStatement(SQL);
+	    if (aluno.getRGM() == null || aluno.getRGM().isEmpty()) {
+	        throw new Exception("O RGM não pode ser nulo ou vazio");
+	    }
+	    if (aluno.getCPF() == null || aluno.getCPF().isEmpty()) {
+	        throw new Exception("O CPF não pode ser nulo ou vazio");
+	    }
+	    
+	    // SQL de inserção com os campos necessários
+	    String SQL = "INSERT INTO tbaluno (Nome, RGM, DataNasc, CPF, Email, Endereco, Municipio, UF, Telefone) "
+	               + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+	    // Tentar executar a inserção no banco de dados
+	    try (PreparedStatement ps = conn.prepareStatement(SQL)) {
+	        // Definindo os parâmetros do PreparedStatement
 	        ps.setString(1, aluno.getNome());
 	        ps.setString(2, aluno.getRGM());
 	        ps.setString(3, aluno.getDataNasc());
@@ -47,14 +58,16 @@ public class AlunoDAO {
 	        ps.setString(7, aluno.getMunicipio());
 	        ps.setString(8, aluno.getUF());
 	        ps.setString(9, aluno.getTelefone());
-	        ps.setString(10, aluno.getCurso());
-	        ps.setString(11, aluno.getCampus());
-	        ps.setString(12, aluno.getPeriodo());
-	        ps.setString(13, aluno.getDisciplina());
+
+	        // Executa o comando de inserção no banco
+	        ps.executeUpdate();
 	    } catch (SQLException sqle) {
-	        throw new Exception("Erro ao inserir dados: " + sqle.getMessage());
+	        // Se ocorrer um erro, lançar uma exceção com detalhes
+	        throw new Exception("Erro ao inserir dados: " + sqle.getMessage(), sqle);
 	    } finally {
-	        ConnectionFactory.closeConnection(conn, ps);
+	        // Fechar a conexão com o banco de dados
+	        ConnectionFactory.closeConnection(conn);
 	    }
 	}
+	
 }
