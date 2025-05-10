@@ -7,6 +7,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+
+import br.edu.fatecgru.dao.AlunoDAO;
+import br.edu.fatecgru.model.Aluno;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import java.awt.FlowLayout;
@@ -15,6 +19,7 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.Insets;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
@@ -56,6 +61,13 @@ public class JanelaCadastro extends JFrame {
 	private JTextField txtSemBoletim;
 	private JTextField txtCursoBoletim;
 	private JTable table_Boletim;
+	private JComboBox comboUFDados;
+	private JComboBox comboBoxCampus;
+	private JComboBox comboBoxCurso;
+	private JComboBox comboBoxDisciplina;
+	private JComboBox comboBoxPeriodo;
+	private JComboBox comboBoxSemestre;
+	
 
 	/**
 	 * Launch the application.
@@ -322,11 +334,54 @@ public class JanelaCadastro extends JFrame {
 		
 
 		// Botão Salvar
+		// Botão Salvar
 		JButton btnSalvarCurso = new JButton("");
+
 		btnSalvarCurso.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
+		        try {
+		            Aluno aluno = new Aluno();
+		            aluno.setNome(txtNomeDados.getText());
+		            aluno.setRGM(txtRgmDados.getText());
+		            aluno.setDataNasc(txtDataDados.getText());
+		            aluno.setCPF(txtCpfDados.getText());
+		           
+		            aluno.setEmail(txtEmailDados.getText());
+		            aluno.setEndereco(txtEnderecoDados.getText());
+		            aluno.setMunicipio(txtMuniDados.getText());
+		            aluno.setUF(comboUFDados.getSelectedItem().toString());
+		            aluno.setTelefone(txtTeleDados.getText());
+		            aluno.setCurso(comboBoxCurso.getSelectedItem().toString());
+		            aluno.setCampus(comboBoxCampus.getSelectedItem().toString());
+
+		            // Verifica o turno selecionado
+		            String turnoSelecionado = "";
+		            if (rdbtnMatutino.isSelected()) {
+		                turnoSelecionado = "Matutino";
+		            } else if (rdbtnVespertino.isSelected()) {
+		                turnoSelecionado = "Vespertino";
+		            } else if (rdbtnNoturno.isSelected()) {
+		                turnoSelecionado = "Noturno";
+		            } else {
+		                throw new Exception("Por favor, selecione um turno.");
+		            }
+
+		            aluno.setPeriodo(turnoSelecionado);
+
+		            // Salvar no banco
+		            AlunoDAO dao = new AlunoDAO();
+		            dao.salvar(aluno);
+
+		            JOptionPane.showMessageDialog(null, "Aluno salvo com sucesso!");
+
+		        } catch (Exception ex) {
+		            JOptionPane.showMessageDialog(null, "Erro ao salvar aluno: " + ex.getMessage());
+		        }
 		    }
 		});
+
+
+
 		btnSalvarCurso.setIcon(redimensionarIcone("/imagens/salvararquivo.png", 32, 32));
 		btnSalvarCurso.setBounds(30, 236, 89, 62);
 		panelCurso.add(btnSalvarCurso);
@@ -562,10 +617,6 @@ public class JanelaCadastro extends JFrame {
 		JComboBox comboRGMBoletim = new JComboBox();
 		comboRGMBoletim.setBounds(351, 20, 210, 22);
 		panelBoletim.add(comboRGMBoletim);
-		
-		
-		
-
-		
+				
 	}
 }

@@ -13,16 +13,19 @@ public class Aluno {
 	private String Semestre;
 	private String Curso;
 	private String Campus;
+	private String CPF;
 	private String Periodo;
 	private float Nota;
 	private int Falta;
+	private String Disciplina;
+	
 	
 	public Aluno() {
 		
 	}
 
 	public Aluno(String nome, String rGM, String endereco, String dataNasc, String municipio, String uF, String email,
-			String telefone, String semestre, String curso, String campus, String periodo, float nota, int falta) {
+			String telefone, String semestre, String disciplina, String curso, String cpf, String campus, String periodo, float nota, int falta) {
 		Nome = nome;
 		RGM = rGM;
 		Endereco = endereco;
@@ -37,6 +40,8 @@ public class Aluno {
 		Periodo = periodo;
 		Nota = nota;
 		Falta = falta;
+		Disciplina = disciplina;
+		CPF = cpf;
 	}
 
 	public String getNome() {
@@ -127,6 +132,14 @@ public class Aluno {
 		Campus = campus;
 	}
 
+	public String getCPF() {
+		return CPF;
+	}
+
+	public void setCPF(String cPF) {
+		CPF = cPF;
+	}
+
 	public String getPeriodo() {
 		return Periodo;
 	}
@@ -150,4 +163,13 @@ public class Aluno {
 	public void setFalta(int falta) {
 		Falta = falta;
 	}
+
+	public String getDisciplina() {
+		return Disciplina;
+	}
+
+	public void setDisciplina(String disciplina) {
+		Disciplina = disciplina;
+	}
+
 }

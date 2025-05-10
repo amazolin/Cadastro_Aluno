@@ -28,32 +28,33 @@ public class AlunoDAO {
 		}
 	}
 	
-	// Método Salvar
+	// Método Salvar Tela Curso
 	
 	public void salvar(Aluno aluno) throws Exception {
-		if (aluno == null) {
-			throw new Exception("O nome não pode ser nulo");
-		}
-		try {
-			String SQL = "INSERT INTO tbAluno (Nome, RGM, DataNasc, Email, Endereco, Municipio,"
-					+ " UF, Telefone, Curso, Campus, Periodo)"+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			ps = conn.prepareStatement(SQL);
-			ps.setString(1, aluno.getNome());
-			ps.setString(2, aluno.getRGM());
-			ps.setString(3, aluno.getDataNasc());
-			ps.setString(4, aluno.getEmail());
-			ps.setString(5, aluno.getEndereco());
-			ps.setString(6, aluno.getMunicipio());
-			ps.setString(7, aluno.getUF());
-			ps.setString(8, aluno.getTelefone());
-			ps.setString(9, aluno.getCurso());
-			ps.setString(10,aluno.getCampus());
-			ps.setString(11, aluno.getPeriodo());
-		} catch (SQLException sqle) {
-			throw new Exception("Erro ao inserir dados " + sqle);
-		} finally {
-			ConnectionFactory.closeConnection(conn, ps);
-		}
+	    if (aluno == null || aluno.getNome() == null || aluno.getNome().isEmpty()) {
+	        throw new Exception("O nome não pode ser nulo ou vazio");
+	    }
+	    try {
+	        String SQL = "INSERT INTO tbaluno (Nome, RGM, DataNasc, CPF, Email, Endereco, Municipio, UF, Telefone, Curso, Campus, Periodo, Disciplina) "
+	                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	        ps = conn.prepareStatement(SQL);
+	        ps.setString(1, aluno.getNome());
+	        ps.setString(2, aluno.getRGM());
+	        ps.setString(3, aluno.getDataNasc());
+	        ps.setString(4, aluno.getCPF());
+	        ps.setString(5, aluno.getEmail());
+	        ps.setString(6, aluno.getEndereco());
+	        ps.setString(7, aluno.getMunicipio());
+	        ps.setString(8, aluno.getUF());
+	        ps.setString(9, aluno.getTelefone());
+	        ps.setString(10, aluno.getCurso());
+	        ps.setString(11, aluno.getCampus());
+	        ps.setString(12, aluno.getPeriodo());
+	        ps.setString(13, aluno.getDisciplina());
+	    } catch (SQLException sqle) {
+	        throw new Exception("Erro ao inserir dados: " + sqle.getMessage());
+	    } finally {
+	        ConnectionFactory.closeConnection(conn, ps);
+	    }
 	}
-	
 }

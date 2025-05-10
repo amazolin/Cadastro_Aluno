@@ -4,19 +4,23 @@ import java.sql.*;
 
 public class ConnectionFactory {
 	public static Connection getConnection() throws Exception {
-		try {
-			/*
-			 * indica qual é o banco de dados que estou utilizando e seu driver
-			 */
-			Class.forName("com.mysql.jdbc.Driver");
-			// estabelece a conexao e retorna uma conexao
-			String url = "jdbc:mysql://localhost:3306/cadastroaluno";
-			String user = "root";
-			String senha = "";
-			return DriverManager.getConnection(url, user, senha);
-		} catch (Exception e) {
-			throw new Exception(e.getMessage());
-		}
+	    try {
+	        // Verifica se o driver está no classpath
+	        Class.forName("com.mysql.cj.jdbc.Driver");
+	        System.out.println("Driver JDBC carregado com sucesso!"); // Debug
+	        
+	        String url = "jdbc:mysql://localhost:3306/cadastroaluno";
+	        String user = "root";
+	        String senha = "";
+	        
+	        Connection conn = DriverManager.getConnection(url, user, senha);
+	        System.out.println("Conexão estabelecida com sucesso!"); // Debug
+	        return conn;
+	    } catch (ClassNotFoundException e) {
+	        throw new Exception("Driver JDBC não encontrado! Verifique o Build Path.", e);
+	    } catch (SQLException e) {
+	        throw new Exception("Erro ao conectar ao banco de dados: " + e.getMessage(), e);
+	    }
 	}
 
 	// fecha uma conexão de três formas: conn, stmt, rs
@@ -33,16 +37,18 @@ public class ConnectionFactory {
 	}
 
 	private static void close(Connection conn, Statement stmt, ResultSet rs) throws Exception {
-		try {
-			if (rs != null)
-				rs.close();
-			if (stmt != null)
-				stmt.close();
-			if (conn != null)
-				conn.close();
-		} catch (Exception e) {
-			throw new Exception(e.getMessage());
-		}
+	    try {
+	        if (rs != null) rs.close();
+	        if (stmt != null) stmt.close();
+	        if (conn != null) {
+	            if (!conn.getAutoCommit()) {
+	                conn.commit(); // ⭐ Confirma pendências se auto-commit estiver desligado
+	            }
+	            conn.close();
+	        }
+	    } catch (Exception e) {
+	        throw new Exception("Erro ao fechar conexão: " + e.getMessage(), e);
+	    }
 	}
 
 }
