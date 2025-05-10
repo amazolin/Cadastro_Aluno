@@ -1,5 +1,2 @@
 Falta:
-Alunos.java ( Priscila)
-AlunoDAO.java ( Todos ){
-Métodos para Java e BD
-}
+AlunoDAO.java ( Métodos para Java e BD ). Todos ajudam.
