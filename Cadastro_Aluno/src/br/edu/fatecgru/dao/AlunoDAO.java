@@ -16,7 +16,7 @@ public class AlunoDAO {
 	private ResultSet rs;	// Uma Table
 	private Aluno aluno;
 	
-	public LeitorDao() throws Exception{
+	public AlunoDAO() throws Exception{
 		/*
 		 * Chama a classe ConnectionFactory e estabelece uma conexão
 		 */
@@ -35,10 +35,24 @@ public class AlunoDAO {
 			throw new Exception("O nome não pode ser nulo");
 		}
 		try {
-			String SQL = "INSERT INTO tbAluno (RGM, Nome, Endereco, UF, Municipio, Telefone)"
+			String SQL = "INSERT INTO tbAluno (Nome, RGM, DataNasc, Email, Endereco, Municipio,"
+					+ " UF, Telefone, Curso, Campus, Periodo)"+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			ps = conn.prepareStatement(SQL);
-			ps.setString(1, aluno.getRGM());
-			ps.setString(2,)
+			ps.setString(1, aluno.getNome());
+			ps.setString(2, aluno.getRGM());
+			ps.setString(3, aluno.getDataNasc());
+			ps.setString(4, aluno.getEmail());
+			ps.setString(5, aluno.getEndereco());
+			ps.setString(6, aluno.getMunicipio());
+			ps.setString(7, aluno.getUF());
+			ps.setString(8, aluno.getTelefone());
+			ps.setString(9, aluno.getCurso());
+			ps.setString(10,aluno.getCampus());
+			ps.setString(11, aluno.getPeriodo());
+		} catch (SQLException sqle) {
+			throw new Exception("Erro ao inserir dados " + sqle);
+		} finally {
+			ConnectionFactory.closeConnection(conn, ps);
 		}
 	}
 	
