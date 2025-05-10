@@ -2,4 +2,5 @@ package br.edu.fatecgru.model;
 
 public class Aluno {
 		// atributos, Construtores, Getters & Setters
+	private faltas int;
 }
