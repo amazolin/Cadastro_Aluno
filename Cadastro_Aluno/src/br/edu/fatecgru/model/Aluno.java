@@ -15,7 +15,7 @@ public class Aluno {
 	private String Campus;
 	private String CPF;
 	private String Periodo;
-	private float Nota;
+	private double Nota;
 	private int Falta;
 	private String Disciplina;
 	
@@ -25,7 +25,7 @@ public class Aluno {
 	}
 
 	public Aluno(String nome, String rGM, String endereco, String dataNasc, String municipio, String uF, String email,
-			String telefone, String semestre, String disciplina, String curso, String cpf, String campus, String periodo, float nota, int falta) {
+			String telefone, String semestre, String disciplina, String curso, String cpf, String campus, String periodo, double nota, int falta) {
 		Nome = nome;
 		RGM = rGM;
 		Endereco = endereco;
@@ -148,11 +148,11 @@ public class Aluno {
 		Periodo = periodo;
 	}
 
-	public float getNota() {
+	public double getNota() {
 		return Nota;
 	}
 
-	public void setNota(float nota) {
+	public void setNota(double nota) {
 		Nota = nota;
 	}
 

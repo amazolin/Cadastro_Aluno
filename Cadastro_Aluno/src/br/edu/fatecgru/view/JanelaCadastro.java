@@ -71,6 +71,7 @@ public class JanelaCadastro extends JFrame {
 		});
 	}
 	
+	
 	// Função auxiliar para redimensionar ícones
 			private ImageIcon redimensionarIcone(String caminho, int largura, int altura) {
 			    ImageIcon iconeOriginal = new ImageIcon(JanelaCadastro.class.getResource(caminho));
@@ -332,6 +333,7 @@ public class JanelaCadastro extends JFrame {
 		            aluno.setCurso(comboBoxCurso.getSelectedItem().toString());
 		            aluno.setCampus(comboBoxCampus.getSelectedItem().toString());
 		            
+		            
 		            // Verifica o turno selecionado
 		            String turnoSelecionado = "";
 		            if (rdbtnMatutino.isSelected()) {
@@ -431,6 +433,8 @@ public class JanelaCadastro extends JFrame {
 			    "Inglês III", "Inglês IV", "Linguagem de Programação", "Metodologia Científica", "Programação Orientada a Objetos",
 			    "Sistemas Operacionais", 
 			};
+		
+		
 		comboBoxDisciplina = new JComboBox<>(disciplina);
 		comboBoxDisciplina.setBounds(92, 128, 446, 22);
 		panelNotasFaltas.add(comboBoxDisciplina);
@@ -453,13 +457,16 @@ public class JanelaCadastro extends JFrame {
 		panelNotasFaltas.add(lblNewLabel_14);
 		
 		String[] nota = {
-			    "", "0,0", "0,5", "1,0", "1,5", "2,0", "2,5", "3,0", "3,5", "4,0", "4,5",
-			    "5,0", "5,5", "6,0", "6,5", "7,0", "7,5", "8,0", "8,5", "9,0", "9,5", "10,0"
+			    "", "0.00", "0.50", "1.00", "1.50", "2.00", "2.00", "3.00", "3.50", "4.00", "4.50",
+			    "5.00", "5.50", "6.00", "6.50", "7.00", "7.50", "8.00", "8.50", "9.00", "9.50", "10.00"
 			};
 
 		comboBoxNota = new JComboBox<>(nota);
 		comboBoxNota.setBounds(269, 189, 74, 22);
 		panelNotasFaltas.add(comboBoxNota);
+		for (double i = 0.0; i <= 10.0; i += 0.5) {
+		    comboBoxNota.addItem(String.format("%.2f", i));  // Formatação para uma casa decimal
+		}
 		
 		JLabel lblNewLabel_15 = new JLabel("Faltas");
 		lblNewLabel_15.setBounds(388, 193, 39, 14);
@@ -468,32 +475,59 @@ public class JanelaCadastro extends JFrame {
 		// Botão Salvar
 		JButton btnSalvarNotas = new JButton("");
 		btnSalvarNotas.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        // ação de salvar
-		    	Aluno aluno = new Aluno();
-		    	
-		    	aluno.setFalta(aluno.getFalta());
-		    	aluno.setDisciplina(aluno.getDisciplina());
-		    	aluno.setSemestre(aluno.getSemestre());
-		    	
-		    	try {
-	            	aluno.setNota(Float.parseFloat(comboBoxNota.getSelectedItem().toString()));
-	            } catch (NumberFormatException ex) {
-	                aluno.setNota(0f); // valor padrão se estiver vazio ou inválido
-	            } 
-		    	
-		    	try {
-		    	AlunoDAO dao = new AlunoDAO();
-		    	
-		    	dao.salvarNotas(aluno);
-		    	
-		    	JOptionPane.showMessageDialog(null, "Aluno salvo com sucesso!");
-		    	
-		    } catch (Exception ex) {
-		    	JOptionPane.showMessageDialog(null, "Erro ao salvar aluno: " + ex.getMessage());
-		    	
+			public void actionPerformed(ActionEvent e) {
+		        // Criação do objeto aluno
+		        Aluno aluno = new Aluno();
+
+		        // Captura dos dados do aluno
+		        aluno.setNome(txtNomeNotas.getText()); // Nome do aluno
+		        aluno.setRGM(txtRgmNotas.getText()); // RGM do aluno
+		        aluno.setSemestre(comboBoxSemestre.getSelectedItem().toString()); // Semestre
+		        aluno.setDisciplina(comboBoxDisciplina.getSelectedItem().toString()); // Disciplina
+		        
+		        // Captura da nota
+		        try {
+		            // Verifica se há um item selecionado no comboBox
+		            Object selectedItem = comboBoxNota.getSelectedItem();
+		            if (selectedItem != null) {
+		                // Log para verificar o item selecionado
+		                System.out.println("Item selecionado: " + selectedItem.toString());
+		                
+		                // Convertendo para double com 2 casas decimais
+		                double nota = Double.parseDouble(selectedItem.toString()); // Captura de nota
+		                aluno.setNota(nota);  // Atribuindo a nota
+		                System.out.println("Nota capturada: " + nota);
+		            } else {
+		                throw new Exception("Nenhuma nota foi selecionada.");
+		            }
+		        } catch (NumberFormatException ex) {
+		            aluno.setNota(0.0); // Valor padrão caso haja erro na conversão
+		            System.out.println("Erro ao capturar nota. Valor padrão atribuído.");
+		        } catch (Exception ex) {
+		            System.out.println("Erro: " + ex.getMessage());
+		        }
+
+		        // Captura da falta (provavelmente de um JTextField)
+		        try {
+		            int falta = Integer.parseInt(txtFaltasNota.getText()); // Falta capturada de um JTextField
+		            aluno.setFalta(falta);
+		            System.out.println("Falta capturada: " + falta);
+		        } catch (NumberFormatException ex) {
+		            aluno.setFalta(0); // Valor padrão se não for um número válido
+		            System.out.println("Erro ao capturar falta. Valor padrão atribuído.");
+		        }
+
+		        // Agora, você está certo de que os dados estão sendo capturados corretamente.
+		        // Chama o método de salvar no DAO
+		        try {
+		            AlunoDAO dao = new AlunoDAO();
+		            dao.salvarNotas(aluno); // Chama o método de salvar notas
+
+		            JOptionPane.showMessageDialog(null, "Notas e faltas salvas com sucesso!");
+		        } catch (Exception ex) {
+		            JOptionPane.showMessageDialog(null, "Erro ao salvar notas: " + ex.getMessage());
+		        }
 		    }
-		   }
 		});
 		
 		
