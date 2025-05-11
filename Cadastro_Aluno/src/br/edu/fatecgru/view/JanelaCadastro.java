@@ -67,7 +67,7 @@ public class JanelaCadastro extends JFrame {
 	private JComboBox comboBoxDisciplina;
 	private JComboBox comboBoxPeriodo;
 	private JComboBox comboBoxSemestre;
-	
+	private JComboBox comboBoxNota;
 
 	/**
 	 * Launch the application.
@@ -265,7 +265,7 @@ public class JanelaCadastro extends JFrame {
 			    "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN",
 			    "RS", "RO", "RR", "SC", "SP", "SE", "TO"
 			};
-		JComboBox comboUFDados = new JComboBox<>(estados);
+		comboUFDados = new JComboBox<>(estados);
 		comboUFDados.setBounds(264, 245, 54, 22);
 		panelDadosPessoais.add(comboUFDados);
 		
@@ -300,7 +300,7 @@ public class JanelaCadastro extends JFrame {
 			    "","Análise e Desenvolvimento de Sistemas", "Engenharia de Software", "Logística", "Logística Aeroportuária",
 			    "Mecatrônica"
 			};
-		JComboBox comboBoxCurso = new JComboBox<>(cursos);
+		comboBoxCurso = new JComboBox<>(cursos);
 		comboBoxCurso.setBounds(129, 40, 379, 22);
 		panelCurso.add(comboBoxCurso);
 		
@@ -308,7 +308,7 @@ public class JanelaCadastro extends JFrame {
 			    "","Adamantina", "Araçatuba", "Birigui", "Campinas", "Diadema", "Fernandópolis", "Guarulhos", "Marília", "Pirituba", 
 			    "Santos", "São Paulo", "Taubaté", 
 			};
-		JComboBox comboBoxCampus = new JComboBox(campus);
+		comboBoxCampus = new JComboBox(campus);
 		comboBoxCampus.setBounds(129, 96, 379, 22);
 		panelCurso.add(comboBoxCampus);
 		
@@ -334,18 +334,18 @@ public class JanelaCadastro extends JFrame {
 		
 
 		// Botão Salvar
-		// Botão Salvar
+		
 		JButton btnSalvarCurso = new JButton("");
 
 		btnSalvarCurso.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        try {
+		        	
 		            Aluno aluno = new Aluno();
 		            aluno.setNome(txtNomeDados.getText());
 		            aluno.setRGM(txtRgmDados.getText());
 		            aluno.setDataNasc(txtDataDados.getText());
-		            aluno.setCPF(txtCpfDados.getText());
-		           
+		            aluno.setCPF(txtCpfDados.getText());  
 		            aluno.setEmail(txtEmailDados.getText());
 		            aluno.setEndereco(txtEnderecoDados.getText());
 		            aluno.setMunicipio(txtMuniDados.getText());
@@ -353,6 +353,7 @@ public class JanelaCadastro extends JFrame {
 		            aluno.setTelefone(txtTeleDados.getText());
 		            aluno.setCurso(comboBoxCurso.getSelectedItem().toString());
 		            aluno.setCampus(comboBoxCampus.getSelectedItem().toString());
+		            aluno.setSemestre(comboBoxSemestre.getSelectedItem().toString());
 
 		            // Verifica o turno selecionado
 		            String turnoSelecionado = "";
@@ -370,6 +371,21 @@ public class JanelaCadastro extends JFrame {
 
 		            // Salvar no banco
 		            AlunoDAO dao = new AlunoDAO();
+		            
+		            
+
+		            try {
+		            	aluno.setNota(Float.parseFloat(comboBoxNota.getSelectedItem().toString()));
+		            } catch (NumberFormatException ex) {
+		                aluno.setNota(0f); // valor padrão se estiver vazio ou inválido
+		            }
+
+		            try {
+		                aluno.setFalta(Integer.parseInt(txtFaltasN.getText()));
+		            } catch (NumberFormatException ex) {
+		                aluno.setFalta(0); // valor padrão se estiver vazio ou inválido
+		            }
+
 		            dao.salvar(aluno);
 
 		            JOptionPane.showMessageDialog(null, "Aluno salvo com sucesso!");
@@ -451,7 +467,7 @@ public class JanelaCadastro extends JFrame {
 			    "Inglês III", "Inglês IV", "Linguagem de Programação", "Metodologia Científica", "Programação Orientada a Objetos",
 			    "Sistemas Operacionais", 
 			};
-		JComboBox comboBoxDisciplina = new JComboBox<>(disciplina);
+		comboBoxDisciplina = new JComboBox<>(disciplina);
 		comboBoxDisciplina.setBounds(92, 128, 446, 22);
 		panelNotasFaltas.add(comboBoxDisciplina);
 		
@@ -464,7 +480,7 @@ public class JanelaCadastro extends JFrame {
 			    "2025-1", "2025-2"
 			};
 		
-		JComboBox comboBoxSemestre = new JComboBox<>(semestre);
+		comboBoxSemestre = new JComboBox<>(semestre);
 		comboBoxSemestre.setBounds(92, 189, 109, 22);
 		panelNotasFaltas.add(comboBoxSemestre);
 		
@@ -477,7 +493,7 @@ public class JanelaCadastro extends JFrame {
 			    "5,0", "5,5", "6,0", "6,5", "7,0", "7,5", "8,0", "8,5", "9,0", "9,5", "10,0"
 			};
 
-		JComboBox comboBoxNota = new JComboBox<>(nota);
+		comboBoxNota = new JComboBox<>(nota);
 		comboBoxNota.setBounds(269, 189, 74, 22);
 		panelNotasFaltas.add(comboBoxNota);
 		
