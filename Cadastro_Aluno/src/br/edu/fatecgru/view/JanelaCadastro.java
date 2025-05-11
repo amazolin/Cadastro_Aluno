@@ -40,26 +40,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
 import javax.swing.JTable;
+import javax.swing.JFormattedTextField;
 
 public class JanelaCadastro extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField txtNomeDados;
-	private JTextField txtRgmDados;
-	private JTextField txtDataDados;
-	private JTextField txtCpfDados;
-	private JTextField txtEmailDados;
-	private JTextField txtEnderecoDados;
-	private JTextField txtMuniDados;
-	private JTextField txtTeleDados;
-	private JTextField txtRGM_Notas;
-	private JTextField txtNomeNotas;
-	private JTextField txtCursoNotas;
-	private JTextField txtFaltasN;
-	private JTextField txtNomeBoletim;
-	private JTextField txtSemBoletim;
-	private JTextField txtCursoBoletim;
 	private JTable table_Boletim;
 	private JComboBox comboUFDados;
 	private JComboBox comboBoxCampus;
@@ -201,60 +187,25 @@ public class JanelaCadastro extends JFrame {
 		lblNewLabel_1.setBounds(354, 34, 46, 14);
 		panelDadosPessoais.add(lblNewLabel_1);
 		
-		txtNomeDados = new JTextField();
-		txtNomeDados.setBounds(91, 31, 244, 20);
-		panelDadosPessoais.add(txtNomeDados);
-		txtNomeDados.setColumns(10);
-		
-		txtRgmDados = new JTextField();
-		txtRgmDados.setColumns(10);
-		txtRgmDados.setBounds(392, 31, 150, 20);
-		panelDadosPessoais.add(txtRgmDados);
-		
 		JLabel lblNewLabel_2 = new JLabel("Data de Nascimento:");
 		lblNewLabel_2.setBounds(30, 82, 118, 14);
 		panelDadosPessoais.add(lblNewLabel_2);
-		
-		txtDataDados = new JTextField();
-		txtDataDados.setBounds(155, 79, 150, 20);
-		panelDadosPessoais.add(txtDataDados);
-		txtDataDados.setColumns(10);
 		
 		JLabel lblNewLabel_3 = new JLabel("CPF:");
 		lblNewLabel_3.setBounds(328, 82, 46, 14);
 		panelDadosPessoais.add(lblNewLabel_3);
 		
-		txtCpfDados = new JTextField();
-		txtCpfDados.setColumns(10);
-		txtCpfDados.setBounds(371, 79, 171, 20);
-		panelDadosPessoais.add(txtCpfDados);
-		
 		JLabel lblNewLabel_4 = new JLabel("Email:");
 		lblNewLabel_4.setBounds(30, 136, 46, 14);
 		panelDadosPessoais.add(lblNewLabel_4);
-		
-		txtEmailDados = new JTextField();
-		txtEmailDados.setColumns(10);
-		txtEmailDados.setBounds(91, 133, 451, 20);
-		panelDadosPessoais.add(txtEmailDados);
 		
 		JLabel lblNewLabel_5 = new JLabel("Endereço:");
 		lblNewLabel_5.setBounds(30, 191, 68, 14);
 		panelDadosPessoais.add(lblNewLabel_5);
 		
-		txtEnderecoDados = new JTextField();
-		txtEnderecoDados.setColumns(10);
-		txtEnderecoDados.setBounds(91, 188, 451, 20);
-		panelDadosPessoais.add(txtEnderecoDados);
-		
 		JLabel lblNewLabel_6 = new JLabel("Município:");
 		lblNewLabel_6.setBounds(30, 249, 55, 14);
 		panelDadosPessoais.add(lblNewLabel_6);
-		
-		txtMuniDados = new JTextField();
-		txtMuniDados.setBounds(91, 246, 125, 20);
-		panelDadosPessoais.add(txtMuniDados);
-		txtMuniDados.setColumns(10);
 		
 		JLabel lblNewLabel_7 = new JLabel("UF:");
 		lblNewLabel_7.setBounds(237, 249, 25, 14);
@@ -273,10 +224,37 @@ public class JanelaCadastro extends JFrame {
 		lblNewLabel_8.setBounds(341, 249, 46, 14);
 		panelDadosPessoais.add(lblNewLabel_8);
 		
-		txtTeleDados = new JTextField();
-		txtTeleDados.setBounds(397, 246, 145, 20);
+		JFormattedTextField txtNomeDados = new JFormattedTextField();
+		txtNomeDados.setBounds(86, 31, 244, 22);
+		panelDadosPessoais.add(txtNomeDados);
+		
+		JFormattedTextField txtRgmDados = new JFormattedTextField();
+		txtRgmDados.setBounds(392, 31, 150, 22);
+		panelDadosPessoais.add(txtRgmDados);
+		
+		JFormattedTextField txtDataNasc = new JFormattedTextField();
+		txtDataNasc.setBounds(150, 79, 150, 22);
+		panelDadosPessoais.add(txtDataNasc);
+		
+		JFormattedTextField txtCpfDados = new JFormattedTextField();
+		txtCpfDados.setBounds(371, 79, 171, 22);
+		panelDadosPessoais.add(txtCpfDados);
+		
+		JFormattedTextField txtEmailDados = new JFormattedTextField();
+		txtEmailDados.setBounds(91, 133, 451, 22);
+		panelDadosPessoais.add(txtEmailDados);
+		
+		JFormattedTextField txtEnderecoDados = new JFormattedTextField();
+		txtEnderecoDados.setBounds(91, 188, 451, 22);
+		panelDadosPessoais.add(txtEnderecoDados);
+		
+		JFormattedTextField txtMuniDados = new JFormattedTextField();
+		txtMuniDados.setBounds(86, 246, 125, 22);
+		panelDadosPessoais.add(txtMuniDados);
+		
+		JFormattedTextField txtTeleDados = new JFormattedTextField();
+		txtTeleDados.setBounds(397, 245, 145, 22);
 		panelDadosPessoais.add(txtTeleDados);
-		txtTeleDados.setColumns(10);
 		
 		//Tela Curso
 		JPanel panelCurso = new JPanel();
@@ -344,7 +322,7 @@ public class JanelaCadastro extends JFrame {
 		            Aluno aluno = new Aluno();
 		            aluno.setNome(txtNomeDados.getText());
 		            aluno.setRGM(txtRgmDados.getText());
-		            aluno.setDataNasc(txtDataDados.getText());
+		            aluno.setDataNasc(txtDataNasc.getText());
 		            aluno.setCPF(txtCpfDados.getText());  
 		            aluno.setEmail(txtEmailDados.getText());
 		            aluno.setEndereco(txtEnderecoDados.getText());
@@ -371,20 +349,6 @@ public class JanelaCadastro extends JFrame {
 
 		            // Salvar no banco
 		            AlunoDAO dao = new AlunoDAO();
-		            
-		            
-
-		            try {
-		            	aluno.setNota(Float.parseFloat(comboBoxNota.getSelectedItem().toString()));
-		            } catch (NumberFormatException ex) {
-		                aluno.setNota(0f); // valor padrão se estiver vazio ou inválido
-		            }
-
-		            try {
-		                aluno.setFalta(Integer.parseInt(txtFaltasN.getText()));
-		            } catch (NumberFormatException ex) {
-		                aluno.setFalta(0); // valor padrão se estiver vazio ou inválido
-		            }
 
 		            dao.salvar(aluno);
 
@@ -412,7 +376,7 @@ public class JanelaCadastro extends JFrame {
 		btnAtualizarCurso.setBounds(136, 236, 89, 62);
 		panelCurso.add(btnAtualizarCurso);
 
-		// Botão Listar
+		// Botão Pesquisar
 		JButton btnListarCurso = new JButton("");
 		btnListarCurso.setIcon(redimensionarIcone("/imagens/lupa.png", 32, 32));
 		btnListarCurso.setBounds(242, 236, 89, 62);
@@ -441,22 +405,23 @@ public class JanelaCadastro extends JFrame {
 		lblNewLabel_1_1.setBounds(20, 29, 46, 14);
 		panelNotasFaltas.add(lblNewLabel_1_1);
 		
-		txtRGM_Notas = new JTextField();
-		txtRGM_Notas.setColumns(10);
-		txtRGM_Notas.setBounds(76, 26, 150, 20);
-		panelNotasFaltas.add(txtRGM_Notas);
+		JFormattedTextField txtRgmNotas = new JFormattedTextField();
+		txtRgmNotas.setBounds(78, 25, 150, 22);
+		panelNotasFaltas.add(txtRgmNotas);
 		
-		txtNomeNotas = new JTextField();
+		JFormattedTextField txtNomeNotas = new JFormattedTextField();
 		txtNomeNotas.setEditable(false);
-		txtNomeNotas.setBounds(257, 26, 281, 20);
+		txtNomeNotas.setBounds(257, 25, 281, 22);
 		panelNotasFaltas.add(txtNomeNotas);
-		txtNomeNotas.setColumns(10);
 		
-		txtCursoNotas = new JTextField();
+		JFormattedTextField txtCursoNotas = new JFormattedTextField();
 		txtCursoNotas.setEditable(false);
-		txtCursoNotas.setBounds(20, 78, 518, 20);
+		txtCursoNotas.setBounds(75, 79, 463, 22);
 		panelNotasFaltas.add(txtCursoNotas);
-		txtCursoNotas.setColumns(10);
+		
+		JFormattedTextField txtFaltasNota = new JFormattedTextField();
+		txtFaltasNota.setBounds(425, 190, 109, 22);
+		panelNotasFaltas.add(txtFaltasNota);
 		
 		JLabel lblNewLabel_12 = new JLabel("Disciplina");
 		lblNewLabel_12.setBounds(20, 132, 62, 14);
@@ -501,18 +466,34 @@ public class JanelaCadastro extends JFrame {
 		lblNewLabel_15.setBounds(388, 193, 39, 14);
 		panelNotasFaltas.add(lblNewLabel_15);
 		
-		txtFaltasN = new JTextField();
-		txtFaltasN.setBounds(434, 190, 104, 20);
-		panelNotasFaltas.add(txtFaltasN);
-		txtFaltasN.setColumns(10);
-		
 		// Botão Salvar
 		JButton btnSalvarNotas = new JButton("");
 		btnSalvarNotas.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        // ação de salvar
+		    	Aluno aluno = new Aluno();
+		    	
+		    	try {
+	            	aluno.setNota(Float.parseFloat(comboBoxNota.getSelectedItem().toString()));
+	            } catch (NumberFormatException ex) {
+	                aluno.setNota(0f); // valor padrão se estiver vazio ou inválido
+	            } 
+		    	
+		    	try {
+		    	AlunoDAO dao = new AlunoDAO();
+		    	
+		    	dao.salvar(aluno);
+		    	
+		    	JOptionPane.showMessageDialog(null, "Aluno salvo com sucesso!");
+		    	
+		    } catch (Exception ex) {
+		    	JOptionPane.showMessageDialog(null, "Erro ao salvar aluno: " + ex.getMessage());
+		    	
 		    }
+		   }
 		});
+		
+		
 		btnSalvarNotas.setIcon(redimensionarIcone("/imagens/salvararquivo.png", 32, 32));
 		btnSalvarNotas.setBounds(30, 236, 89, 62);
 		panelNotasFaltas.add(btnSalvarNotas);
@@ -532,9 +513,33 @@ public class JanelaCadastro extends JFrame {
 		JButton btnListarNotas = new JButton("");
 		btnListarNotas.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		        // ação de listar
+		    	String rgm = txtRgmNotas.getText();
+		    	
+		    	if (!rgm.isEmpty()) {
+		    		try {
+		    			AlunoDAO dao = new AlunoDAO();
+		    			Aluno aluno = dao.pesquisar(rgm);
+		    			
+		    			if (aluno != null) {
+		    				txtNomeNotas.setText(aluno.getNome());
+		    				comboBoxCurso.setSelectedItem(aluno.getCurso());
+		    				txtCursoNotas.setText(aluno.getCurso());
+		    				comboBoxDisciplina.setSelectedItem(aluno.getDisciplina());
+		    				comboBoxSemestre.setSelectedItem(aluno.getSemestre());
+		    				comboBoxNota.setSelectedItem(aluno.getNota());
+		    				txtFaltasNota.setText(String.valueOf(aluno.getFalta()));
+		    			} else {
+		                    JOptionPane.showMessageDialog(null, "Aluno não encontrado.");
+		                }
+		    		} catch (Exception ex) {
+		    			JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());
+		    		}
+		    	} else {
+		            JOptionPane.showMessageDialog(null, "Informe o RGM.");
+		    	}
 		    }
-		});
+		});        // ação de lista
+		    	
 		btnListarNotas.setIcon(redimensionarIcone("/imagens/lupa.png", 32, 32));
 		btnListarNotas.setBounds(245, 236, 89, 62);
 		panelNotasFaltas.add(btnListarNotas);
@@ -560,8 +565,8 @@ public class JanelaCadastro extends JFrame {
 		btnSairNotas.setIcon(redimensionarIcone("/imagens/saida.png", 32, 32));
 		btnSairNotas.setBounds(452, 236, 89, 62);
 		panelNotasFaltas.add(btnSairNotas);
-
 		
+	
 		//Tela Boletim
 		JPanel panelBoletim = new JPanel();
 		tabbedPane.addTab("Boletim", null, panelBoletim, null);
@@ -575,31 +580,13 @@ public class JanelaCadastro extends JFrame {
 		lblNewLabel_17.setBounds(351, 2, 46, 14);
 		panelBoletim.add(lblNewLabel_17);
 		
-		txtNomeBoletim = new JTextField();
-		txtNomeBoletim.setEditable(false);
-		txtNomeBoletim.setBounds(20, 21, 319, 20);
-		panelBoletim.add(txtNomeBoletim);
-		txtNomeBoletim.setColumns(10);
-		
 		JLabel lblNewLabel_18 = new JLabel("Semestre");
 		lblNewLabel_18.setBounds(20, 47, 57, 14);
 		panelBoletim.add(lblNewLabel_18);
 		
-		txtSemBoletim = new JTextField();
-		txtSemBoletim.setEditable(false);
-		txtSemBoletim.setBounds(20, 64, 95, 20);
-		panelBoletim.add(txtSemBoletim);
-		txtSemBoletim.setColumns(10);
-		
 		JLabel lblNewLabel_19 = new JLabel("Curso");
 		lblNewLabel_19.setBounds(129, 47, 35, 14);
 		panelBoletim.add(lblNewLabel_19);
-		
-		txtCursoBoletim = new JTextField();
-		txtCursoBoletim.setEditable(false);
-		txtCursoBoletim.setBounds(129, 64, 210, 20);
-		panelBoletim.add(txtCursoBoletim);
-		txtCursoBoletim.setColumns(10);
 		
 		table_Boletim = new JTable();
 		table_Boletim.setBounds(10, 101, 552, 226);
@@ -633,6 +620,21 @@ public class JanelaCadastro extends JFrame {
 		JComboBox comboRGMBoletim = new JComboBox();
 		comboRGMBoletim.setBounds(351, 20, 210, 22);
 		panelBoletim.add(comboRGMBoletim);
+		
+		JFormattedTextField txtNomeBoletim = new JFormattedTextField();
+		txtNomeBoletim.setEditable(false);
+		txtNomeBoletim.setBounds(20, 21, 319, 22);
+		panelBoletim.add(txtNomeBoletim);
+		
+		JFormattedTextField txtSemestreBoletim = new JFormattedTextField();
+		txtSemestreBoletim.setEditable(false);
+		txtSemestreBoletim.setBounds(20, 63, 95, 22);
+		panelBoletim.add(txtSemestreBoletim);
+		
+		JFormattedTextField txtCursoBoletim = new JFormattedTextField();
+		txtCursoBoletim.setEditable(false);
+		txtCursoBoletim.setBounds(125, 63, 210, 22);
+		panelBoletim.add(txtCursoBoletim);
 				
 	}
 }

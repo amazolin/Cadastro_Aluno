@@ -1,6 +1,7 @@
 package br.edu.fatecgru.dao;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,7 +46,7 @@ public class AlunoDAO {
 	    String SQLAluno = "INSERT INTO tbaluno (Nome, RGM, DataNasc, CPF, Email, Endereco, Municipio, UF, Telefone) "
 	                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-	    String SQLCursoAluno = "INSERT INTO tbcurso (nome_curso, semestre, nota, falta, Disciplina, periodo, campus) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	    String SQLCursoAluno = "INSERT INTO tbcurso (aluno_rgm, nome_curso, semestre, nota, falta, Disciplina, periodo, campus) VALUES (?,?, ?, ?, ?, ?, ?, ?)";
 
 	    try {
 	        conn.setAutoCommit(false); // Desativa autocommit para controle manual
@@ -66,19 +67,22 @@ public class AlunoDAO {
 
 	        // Inserção na tabela de curso (ajuste se for relacionamento, como curso_aluno)
 	        try (PreparedStatement psCurso = conn.prepareStatement(SQLCursoAluno)) {
-	            psCurso.setString(1, aluno.getCurso());       // nome_curso
-	            psCurso.setString(2, aluno.getSemestre());                                                   
-	            psCurso.setDouble(3, aluno.getNota());                    
-	            psCurso.setInt(4, aluno.getFalta());                       
-	            psCurso.setString(5, aluno.getDisciplina());                 
-	            psCurso.setString(6, aluno.getPeriodo());                    
-	            psCurso.setString(7, aluno.getCampus());  
+	            psCurso.setString(1, aluno.getRGM());
+	        	psCurso.setString(2, aluno.getCurso());       // nome_curso
+	            psCurso.setString(3, aluno.getSemestre());                                                   
+	            psCurso.setDouble(4, aluno.getNota());                    
+	            psCurso.setInt(5, aluno.getFalta());                       
+	            psCurso.setString(6, aluno.getDisciplina());                 
+	            psCurso.setString(7, aluno.getPeriodo());                    
+	            psCurso.setString(8, aluno.getCampus());  
 	            
 
 	            psCurso.executeUpdate();
 	        }
+	        
 
 	        conn.commit(); // Tudo certo, confirma
+	       
 
 	    } catch (SQLException sqle) {
 	        if (conn != null) {
@@ -99,6 +103,45 @@ public class AlunoDAO {
 	            throw new Exception("Erro ao fechar a conexão: " + e.getMessage(), e);
 	        }
 	    }
+	    
 	}
+	public Aluno pesquisar(String rgm) throws Exception {
+    	
+		String SQLAluno = "SELECT nome FROM tbaluno WHERE RGM = ?";
+		String SQLCursoAluno = "SELECT nome_curso, disciplina, semestre, nota, falta FROM tbcurso WHERE aluno_rgm = ?";
+    	
+	    Aluno aluno = new Aluno();
+	    aluno.setRGM(rgm);
+		
+		try(PreparedStatement psAluno = conn.prepareStatement(SQLAluno)){
+	    	psAluno.setString(1, aluno.getRGM());
+	    	ResultSet rs = psAluno.executeQuery();
+	    	if (rs.next()) {
+	    		aluno = new Aluno();
+	    		aluno.setRGM(aluno.getRGM());
+	    		aluno.setNome(rs.getString("Nome"));
+	    	}
+	    }
+    	
+    	try (PreparedStatement psCurso = conn.prepareStatement(SQLCursoAluno)) {
+	    	psCurso.setString(1, aluno.getRGM());
+	    	ResultSet rs = psCurso.executeQuery();
+	    	
+	    	if (rs.next()) {
+	    		aluno = new Aluno();
+	    		aluno.setRGM(aluno.getRGM());
+	    		aluno.setCurso(rs.getString("nome_curso"));
+	    		aluno.setDisciplina(rs.getString("disciplina"));
+	            aluno.setSemestre(rs.getString("semestre"));
+	            aluno.setNota(rs.getFloat("nota"));
+	            aluno.setFalta(rs.getInt("falta"));
+	    	}
+	    } catch (SQLException sqle) {
+	        throw new Exception("Erro ao buscar aluno: " + sqle.getMessage(), sqle);
+	    }
+    	return aluno;
+	}	
+
 }
+
 
