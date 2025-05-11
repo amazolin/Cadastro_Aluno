@@ -331,8 +331,7 @@ public class JanelaCadastro extends JFrame {
 		            aluno.setTelefone(txtTeleDados.getText());
 		            aluno.setCurso(comboBoxCurso.getSelectedItem().toString());
 		            aluno.setCampus(comboBoxCampus.getSelectedItem().toString());
-		            aluno.setSemestre(comboBoxSemestre.getSelectedItem().toString());
-
+		            
 		            // Verifica o turno selecionado
 		            String turnoSelecionado = "";
 		            if (rdbtnMatutino.isSelected()) {
@@ -473,6 +472,10 @@ public class JanelaCadastro extends JFrame {
 		        // ação de salvar
 		    	Aluno aluno = new Aluno();
 		    	
+		    	aluno.setFalta(aluno.getFalta());
+		    	aluno.setDisciplina(aluno.getDisciplina());
+		    	aluno.setSemestre(aluno.getSemestre());
+		    	
 		    	try {
 	            	aluno.setNota(Float.parseFloat(comboBoxNota.getSelectedItem().toString()));
 	            } catch (NumberFormatException ex) {
@@ -482,7 +485,7 @@ public class JanelaCadastro extends JFrame {
 		    	try {
 		    	AlunoDAO dao = new AlunoDAO();
 		    	
-		    	dao.salvar(aluno);
+		    	dao.salvarNotas(aluno);
 		    	
 		    	JOptionPane.showMessageDialog(null, "Aluno salvo com sucesso!");
 		    	

@@ -46,11 +46,7 @@ public class AlunoDAO {
 	    String SQLAluno = "INSERT INTO tbaluno (Nome, RGM, DataNasc, CPF, Email, Endereco, Municipio, UF, Telefone) "
 	                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-	    String SQLCursoAluno = "INSERT INTO tbcurso (aluno_rgm, nome_curso, semestre) VALUES (?, ?, ?)";
-	    
-	    String SQLDisciplinaAluno = "INSERT INTO tbdisciplinas (nome_disciplina)" + "VALUES (?)";
-	    
-	    String SQLNotasFaltas = "INSERT INTO tbnotas_faltas(aluno_rgm, nota, falta)" + "VALUES (?, ?, ?)";
+	    String SQLCursoAluno = "INSERT INTO tbcurso (aluno_rgm, nome_curso)" + " VALUES (?, ?)";
 
 	    try {
 	        conn.setAutoCommit(false); // Desativa autocommit para controle manual
@@ -77,20 +73,6 @@ public class AlunoDAO {
 
 	            psCurso.executeUpdate();
 	        }
-	        
-	        try (PreparedStatement psDisciplina = conn.prepareStatement(SQLDisciplinaAluno)) {
-	            psDisciplina.setString(1, aluno.getDisciplina());           
-
-	            psDisciplina.executeUpdate();
-	        }
-	        
-	        try (PreparedStatement psNotasFaltas = conn.prepareStatement(SQLNotasFaltas)){
-	        	psNotasFaltas.setString(1, aluno.getRGM());
-	        	psNotasFaltas.setFloat(2, aluno.getNota());
-	        	psNotasFaltas.setInt(3, aluno.getFalta());;
-	        	
-	        	psNotasFaltas.executeUpdate();
-	        }
 
 	        conn.commit(); // Tudo certo, confirma
 	       
@@ -116,6 +98,85 @@ public class AlunoDAO {
 	    }
 	    
 	}
+	
+	public void salvarNotas(Aluno aluno) throws Exception {
+	    // Verificação inicial de dados essenciais
+	    /*if (aluno.getNome() == null || aluno.getNome().trim().isEmpty()) {
+	        throw new Exception("O nome não pode ser nulo ou vazio");
+	    }
+	    if (aluno.getRGM() == null || aluno.getRGM().trim().isEmpty()) {
+	        throw new Exception("O RGM não pode ser nulo ou vazio");
+	    }
+	    if (aluno.getCPF() == null || aluno.getCPF().trim().isEmpty()) {
+	        throw new Exception("O CPF não pode ser nulo ou vazio");
+	    }*/
+	    
+	    System.out.println("Nome do aluno: " + aluno.getNome());
+
+	    // SQL Statements
+	    String SQLCursoAluno = "INSERT INTO tbcurso (aluno_rgm, nome_curso, semestre) " +
+                "VALUES (?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE nome_curso = VALUES(nome_curso), semestre = VALUES(semestre)";
+	    String SQLDisciplinaAluno = "INSERT INTO tbdisciplinas (nome_disciplina)" + "VALUES (?)"
+                + "ON DUPLICATE KEY UPDATE nome_disciplina = VALUES(nome_disciplina)";
+	    String SQLNotasFaltas = "INSERT INTO tbnotas_faltas (aluno_rgm, nota, falta)" + "VALUES (?, ?, ?)"
+                + "ON DUPLICATE KEY UPDATE nota = VALUES(nota), falta = VALUES(falta)";
+
+	    // Desabilita autocommit para gerenciar transações manualmente
+	    try {
+	        conn.setAutoCommit(false); // Desabilita o auto commit
+
+	        // Inserção na tabela de curso
+	        try (PreparedStatement psCurso = conn.prepareStatement(SQLCursoAluno)) {
+	            psCurso.setString(1, aluno.getRGM());
+	            psCurso.setString(2, aluno.getCurso()); // nome_curso
+	            psCurso.setString(3, aluno.getSemestre());
+
+	            psCurso.executeUpdate();
+	        }
+
+	        // Inserção na tabela de disciplinas
+	        try (PreparedStatement psDisciplina = conn.prepareStatement(SQLDisciplinaAluno)) {
+	            psDisciplina.setString(1, aluno.getDisciplina()); // nome_disciplina
+
+	            psDisciplina.executeUpdate();
+	        }
+
+	        // Inserção na tabela de notas e faltas
+	        try (PreparedStatement psNotasFaltas = conn.prepareStatement(SQLNotasFaltas)) {
+	            psNotasFaltas.setString(1, aluno.getRGM());
+	            psNotasFaltas.setFloat(2, aluno.getNota());
+	            psNotasFaltas.setInt(3, aluno.getFalta());
+
+	            psNotasFaltas.executeUpdate();
+	        }
+
+	        // Confirma todas as operações realizadas
+	        conn.commit(); 
+
+	    } catch (SQLException sqle) {
+	        // Em caso de erro, faz o rollback da transação
+	        if (conn != null) {
+	            try {
+	                conn.rollback(); // Reverte qualquer alteração em caso de erro
+	            } catch (SQLException rollbackEx) {
+	                throw new Exception("Erro ao fazer rollback: " + rollbackEx.getMessage(), rollbackEx);
+	            }
+	        }
+	        throw new Exception("Erro ao inserir dados: " + sqle.getMessage(), sqle);
+	    } finally {
+	        // Restaura o autocommit e fecha a conexão
+	        try {
+	            if (conn != null) {
+	                conn.setAutoCommit(true); // Restaura o autocommit
+	                ConnectionFactory.closeConnection(conn); // Fecha a conexão
+	            }
+	        } catch (SQLException e) {
+	            throw new Exception("Erro ao fechar a conexão: " + e.getMessage(), e);
+	        }
+	    }
+	}
+
 	public Aluno pesquisar(String rgm) throws Exception {
     	
 		String SQLAluno = "SELECT nome FROM tbaluno WHERE RGM = ?";
