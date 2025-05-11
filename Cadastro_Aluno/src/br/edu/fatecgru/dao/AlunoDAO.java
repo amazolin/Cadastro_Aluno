@@ -308,5 +308,49 @@ public class AlunoDAO {
 	        }
 	    }
 	}
+	public void excluirAluno(String rgm) throws Exception {
+	    if (rgm == null || rgm.trim().isEmpty()) {
+	        throw new Exception("O RGM não pode ser nulo ou vazio");
+	    }
+
+	    String sqlExcluir = "DELETE FROM tbaluno WHERE RGM = ?";
+
+	    try {
+	        conn.setAutoCommit(false); // Início da transação
+
+	        try (PreparedStatement psExcluir = conn.prepareStatement(sqlExcluir)) {
+	            psExcluir.setString(1, rgm);
+	            int linhasAfetadas = psExcluir.executeUpdate();
+
+	            if (linhasAfetadas == 0) {
+	                throw new Exception("Nenhum aluno encontrado com o RGM informado.");
+	            }
+	        }
+
+	        conn.commit(); // Confirma exclusão
+	        System.out.println("Aluno com RGM " + rgm + " excluído com sucesso.");
+
+	    } catch (SQLException sqle) {
+	        if (conn != null) {
+	            try {
+	                conn.rollback(); // Reverte caso algo dê errado
+	            } catch (SQLException rollbackEx) {
+	                throw new Exception("Erro ao fazer rollback: " + rollbackEx.getMessage(), rollbackEx);
+	            }
+	        }
+	        throw new Exception("Erro ao excluir aluno: " + sqle.getMessage(), sqle);
+
+	    } finally {
+	        try {
+	            if (conn != null) {
+	                conn.setAutoCommit(true); // Restaura autocommit
+	                ConnectionFactory.closeConnection(conn);
+	            }
+	        } catch (SQLException e) {
+	            throw new Exception("Erro ao fechar a conexão: " + e.getMessage(), e);
+	        }
+	    }
+	}
+
 }
 
