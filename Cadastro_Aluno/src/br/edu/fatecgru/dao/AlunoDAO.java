@@ -33,13 +33,13 @@ public class AlunoDAO {
 	
 	public void salvar(Aluno aluno) throws Exception {
 	    // Verificação inicial de dados essenciais
-	    if (aluno == null || aluno.getNome() == null || aluno.getNome().isEmpty()) {
+	    if (aluno.getNome() == null || aluno.getNome().trim().isEmpty()) {
 	        throw new Exception("O nome não pode ser nulo ou vazio");
 	    }
-	    if (aluno.getRGM() == null || aluno.getRGM().isEmpty()) {
+	    if (aluno.getRGM() == null || aluno.getRGM().trim().isEmpty()) {
 	        throw new Exception("O RGM não pode ser nulo ou vazio");
 	    }
-	    if (aluno.getCPF() == null || aluno.getCPF().isEmpty()) {
+	    if (aluno.getCPF() == null || aluno.getCPF().trim().isEmpty()) {
 	        throw new Exception("O CPF não pode ser nulo ou vazio");
 	    }
 
@@ -125,37 +125,33 @@ public class AlunoDAO {
 	    Aluno aluno = new Aluno();
 	    aluno.setRGM(rgm);
 	    
-	    try (PreparedStatement psCurso = conn.prepareStatement(SQLNotaFalta)) {
+	    try(PreparedStatement psAluno = conn.prepareStatement(SQLAluno)){
+	    	psAluno.setString(1, aluno.getRGM());
+	    	ResultSet rs = psAluno.executeQuery();
+	    	if (rs.next()) {
+	    		aluno.setNome(rs.getString("Nome"));
+	    		}
+		    }
+	    
+	    try (PreparedStatement psCurso = conn.prepareStatement(SQLCurso)) {
 	    	psCurso.setString(1, aluno.getRGM());
 	    	ResultSet rs = psCurso.executeQuery();
 	    	
 	    	if (rs.next()) {
-	    		aluno = new Aluno();
-	    		aluno.setRGM(aluno.getRGM());
-	    		aluno.setCurso(aluno.getCurso());
-	    		//aluno.setCurso(rs.getString("nome_curso"));
-	    }
-	    }
-		
-		try(PreparedStatement psAluno = conn.prepareStatement(SQLAluno)){
-	    	psAluno.setString(1, aluno.getRGM());
-	    	ResultSet rs = psAluno.executeQuery();
-	    	if (rs.next()) {
-	    		aluno = new Aluno();
-	    		aluno.setRGM(aluno.getRGM());
-	    		aluno.setNome(rs.getString("Nome"));
+	    		aluno.setCurso(rs.getString("nome_curso"));
 	    	}
 	    }
-    	
+	    
     	try (PreparedStatement psNotas = conn.prepareStatement(SQLNotaFalta)) {
 	    	psNotas.setString(1, aluno.getRGM());
 	    	ResultSet rs = psNotas.executeQuery();
 	    	
 	    	if (rs.next()) {
-	    		aluno = new Aluno();
-	    		aluno.setRGM(aluno.getRGM());
 	            aluno.setNota(rs.getFloat("nota"));
 	            aluno.setFalta(rs.getInt("falta"));
+	    	} else {
+	    		aluno.setNota(0);
+	    		aluno.setFalta(0);
 	    	}
 	    	
 	    } catch (SQLException sqle) {
