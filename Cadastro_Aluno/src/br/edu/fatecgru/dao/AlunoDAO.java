@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 import br.edu.fatecgru.model.Aluno;
 import br.edu.fatecgru.util.ConnectionFactory;
 
@@ -348,9 +351,62 @@ public class AlunoDAO {
 	            }
 	        } catch (SQLException e) {
 	            throw new Exception("Erro ao fechar a conexão: " + e.getMessage(), e);
+	        } 
+	    }
+	}
+	public Aluno buscarDadosAluno(String rgm) throws Exception {
+	    String sql = """
+	        SELECT a.Nome, c.nome_curso, c.semestre
+	        FROM tbaluno a
+	        JOIN tbcurso c ON c.aluno_rgm = a.RGM
+	        WHERE a.RGM = ?
+	    """;
+
+	    try (Connection conn = ConnectionFactory.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+	        stmt.setString(1, rgm);
+	        ResultSet rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            Aluno aluno = new Aluno();
+	            aluno.setRGM(rgm);
+	            aluno.setNome(rs.getString("Nome"));
+	            aluno.setCurso(rs.getString("nome_curso"));
+	            aluno.setSemestre(rs.getString("semestre"));
+	            return aluno;
+	        } else {
+	            return null;
 	        }
 	    }
 	}
+	public void pesquisarBoletimDoAluno(String rgm, JTable tableBoletim) throws Exception {
+	    String sql = """
+	        SELECT d.nome_disciplina, nf.nota, nf.falta
+	        FROM tbnotas_faltas nf
+	        JOIN tbdisciplinas d ON nf.idDisciplina = d.idDisciplina
+	        WHERE nf.aluno_rgm = ?
+	    """;
 
+	    try (Connection conn = ConnectionFactory.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+	        stmt.setString(1, rgm);
+	        ResultSet rs = stmt.executeQuery();
+
+	        DefaultTableModel model = (DefaultTableModel) tableBoletim.getModel();
+	        model.setRowCount(0); // Limpa a tabela
+
+	        while (rs.next()) {
+	            model.addRow(new Object[]{
+	                rs.getString("nome_disciplina"),
+	                rs.getDouble("nota"),
+	                rs.getInt("falta")
+	            });
+	        }
+
+	    }
+	}
 }
+
 

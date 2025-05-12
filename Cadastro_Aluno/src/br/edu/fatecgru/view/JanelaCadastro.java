@@ -22,6 +22,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import java.awt.event.InputEvent;
 import java.awt.Component;
 import javax.swing.JSeparator;
@@ -84,7 +85,11 @@ public class JanelaCadastro extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public JanelaCadastro() {
+			
+			
+			
+			
+		public JanelaCadastro() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 661, 497);
 		
@@ -514,9 +519,6 @@ public class JanelaCadastro extends JFrame {
 		comboBoxNota = new JComboBox<>(nota);
 		comboBoxNota.setBounds(269, 189, 74, 22);
 		panelNotasFaltas.add(comboBoxNota);
-		for (double i = 0.0; i <= 10.0; i += 0.5) {
-		    comboBoxNota.addItem(String.format("%.2f", i));  // Formatação para uma casa decimal
-		}
 		
 		JLabel lblNewLabel_15 = new JLabel("Faltas");
 		lblNewLabel_15.setBounds(388, 193, 39, 14);
@@ -687,15 +689,6 @@ public class JanelaCadastro extends JFrame {
 		
 		// Atribuindo o modelo a tabela
 		table_Boletim.setModel(modelo);
-		
-		/* Adicionando as linhas
-		modelo.addRow(new Object[] {"Disciplinas", "Notas", "Faltas"});
-		for(int i = 0; i <disciplina.length; i++) {
-			modelo.addRow(new Object[] {disciplina[i],nota[i], " "});
-			}
-			
-		modelo.addRow(nota);*/
-		
 		JButton btnPdfBoletim = new JButton("Gerar PDF");
 		btnPdfBoletim.setBounds(467, 63, 95, 23);
 		panelBoletim.add(btnPdfBoletim);
@@ -703,10 +696,6 @@ public class JanelaCadastro extends JFrame {
 		JButton btnPesquisarBoletim = new JButton("Pesquisar");
 		btnPesquisarBoletim.setBounds(351, 63, 95, 23);
 		panelBoletim.add(btnPesquisarBoletim);
-		
-		JComboBox comboRGMBoletim = new JComboBox();
-		comboRGMBoletim.setBounds(351, 20, 210, 22);
-		panelBoletim.add(comboRGMBoletim);
 		
 		JFormattedTextField txtNomeBoletim = new JFormattedTextField();
 		txtNomeBoletim.setEditable(false);
@@ -722,6 +711,41 @@ public class JanelaCadastro extends JFrame {
 		txtCursoBoletim.setEditable(false);
 		txtCursoBoletim.setBounds(125, 63, 210, 22);
 		panelBoletim.add(txtCursoBoletim);
-				
+		
+		JFormattedTextField txtRgmBoletim = new JFormattedTextField();
+		txtRgmBoletim.setBounds(351, 22, 211, 23);
+		panelBoletim.add(txtRgmBoletim);
+
+
+		btnPesquisarBoletim.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        try {
+		            String rgm = txtRgmBoletim.getText();
+
+		            AlunoDAO dao = new AlunoDAO();
+
+		            // 1. Preencher tabela
+		            dao.pesquisarBoletimDoAluno(rgm, table_Boletim);
+
+		            // 2. Buscar dados do aluno
+		            Aluno aluno = dao.buscarDadosAluno(rgm);
+		            if (aluno != null) {
+		                txtNomeBoletim.setText(aluno.getNome());
+		                txtCursoBoletim.setText(aluno.getCurso());
+		                txtSemestreBoletim.setText(aluno.getSemestre());
+		            } else {
+		                JOptionPane.showMessageDialog(null, "Aluno não encontrado.");
+		            }
+
+		        } catch (Exception ex) {
+		            JOptionPane.showMessageDialog(null, "Erro ao buscar dados: " + ex.getMessage());
+		            ex.printStackTrace();
+		        }
+		    }
+		});
+		
+		
 	}
 }
+
+
