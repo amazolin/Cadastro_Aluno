@@ -10,6 +10,7 @@ import javax.swing.table.TableColumn;
 
 import br.edu.fatecgru.dao.AlunoDAO;
 import br.edu.fatecgru.model.Aluno;
+import br.edu.fatecgru.util.ExportadorPDF;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -744,8 +745,30 @@ public class JanelaCadastro extends JFrame {
 		    }
 		});
 		
-		
+		btnPdfBoletim.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        try {
+		            // Obtendo os dados do aluno
+		            String nomeAluno = txtNomeBoletim.getText().trim();
+		            String rgmAluno = txtRgmBoletim.getText().trim();
+
+		            if (nomeAluno.isEmpty() || rgmAluno.isEmpty()) {
+		                JOptionPane.showMessageDialog(null, "Preencha o nome e o RGM antes de gerar o PDF.");
+		                return;
+		            }
+
+		            // Monta o nome do arquivo com nome e RGM
+		            String nomeFormatado = nomeAluno.replace(" ", "_").replaceAll("[^a-zA-Z0-9_]", "");
+		            String caminhoPDF = "C:\\Users\\Rafae\\Downloads\\Boletim_" + nomeFormatado + "_(" + rgmAluno + ").pdf";
+
+		            // Chama o método para gerar o PDF
+		            ExportadorPDF.exportarJTableParaPDF(table_Boletim, caminhoPDF, nomeAluno, rgmAluno);
+
+		        } catch (Exception ex) {
+		            JOptionPane.showMessageDialog(null, "Erro ao gerar PDF: " + ex.getMessage());
+		            ex.printStackTrace();
+		        }
+		    }
+		});
 	}
 }
-
-

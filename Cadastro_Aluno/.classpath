@@ -7,5 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="mysql-connector-j-8.0.33.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rafae/Downloads/itextpdf-5.5.13.3/itextpdf-5.5.13.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

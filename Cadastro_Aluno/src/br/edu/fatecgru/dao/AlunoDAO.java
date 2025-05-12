@@ -1,5 +1,8 @@
 package br.edu.fatecgru.dao;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
+
 import java.sql.Connection;
 
 import java.sql.PreparedStatement;
@@ -10,6 +13,11 @@ import java.util.List;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import javax.swing.*;
+import java.io.FileOutputStream;
+
+import com.mysql.cj.xdevapi.Statement;
 
 import br.edu.fatecgru.model.Aluno;
 import br.edu.fatecgru.util.ConnectionFactory;
@@ -115,8 +123,11 @@ public class AlunoDAO {
 	        	
 	        	psNotas.executeUpdate();
 	        }
+	        
 
 	        conn.commit(); // Tudo certo, confirma
+	        
+	        
 	       
 
 	    } catch (SQLException sqle) {
@@ -139,6 +150,7 @@ public class AlunoDAO {
 	        }
 	    }
 	    System.out.println("Nome do aluno: " + aluno.getNome());
+	    
 	}
 
 	public Aluno pesquisar(String rgm) throws Exception {
@@ -407,6 +419,8 @@ public class AlunoDAO {
 
 	    }
 	}
+
 }
+
 
 
