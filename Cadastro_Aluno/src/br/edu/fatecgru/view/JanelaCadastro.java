@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.text.MaskFormatter;
 
 import br.edu.fatecgru.dao.AlunoDAO;
 import br.edu.fatecgru.model.Aluno;
@@ -23,24 +24,19 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
-import java.util.List;
 import java.awt.event.InputEvent;
-import java.awt.Component;
 import javax.swing.JSeparator;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextArea;
 import javax.swing.JTable;
 import javax.swing.JFormattedTextField;
 
@@ -55,9 +51,11 @@ public class JanelaCadastro extends JFrame {
 	private JComboBox comboBoxDisciplina;
 	private JComboBox comboBoxPeriodo;
 	private JComboBox comboBoxSemestre;
-	private JComboBox comboBoxNota;    // No início da classe, junto com os outros campos
+	private JComboBox comboBoxNota;
+	
+	// No início da classe, junto com os outros campos
 	private JFormattedTextField txtRgmNotas;
-
+	private JFormattedTextField txtDataNascimento;
 
 	/**
 	 * Launch the application.
@@ -86,11 +84,9 @@ public class JanelaCadastro extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+				
 			
-			
-			
-			
-		public JanelaCadastro() {
+		public JanelaCadastro() throws Exception {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 661, 497);
 		
@@ -136,6 +132,11 @@ public class JanelaCadastro extends JFrame {
 		mnNewMenu.add(separator);
 		
 		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Sair");
+		mntmNewMenuItem_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
 		mntmNewMenuItem_4.setHorizontalAlignment(SwingConstants.LEFT);
 		mntmNewMenuItem_4.setHorizontalTextPosition(SwingConstants.LEFT);
 		mntmNewMenuItem_4.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -160,6 +161,9 @@ public class JanelaCadastro extends JFrame {
 		mntmNewMenuItem_7.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mnNewMenu_1.add(mntmNewMenuItem_7);
 		
+		JSeparator separator_1 = new JSeparator();
+		mnNewMenu_1.add(separator_1);
+		
 		JMenuItem mntmNewMenuItem_8 = new JMenuItem("Consultar");
 		mntmNewMenuItem_8.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mnNewMenu_1.add(mntmNewMenuItem_8);
@@ -170,6 +174,14 @@ public class JanelaCadastro extends JFrame {
 		menuBar.add(mnNewMenu_2);
 		
 		JMenuItem mntmNewMenuItem_9 = new JMenuItem("Sobre");
+		mntmNewMenuItem_9.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//=====================================
+					JOptionPane.showMessageDialog(null, "Informações do Menu.");
+				//=====================================
+			}
+		});
+		mntmNewMenuItem_9.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.SHIFT_DOWN_MASK));
 		mntmNewMenuItem_9.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mnNewMenu_2.add(mntmNewMenuItem_9);
 		contentPane = new JPanel();
@@ -241,29 +253,29 @@ public class JanelaCadastro extends JFrame {
 		txtRgmDados.setBounds(392, 31, 150, 22);
 		panelDadosPessoais.add(txtRgmDados);
 		
-		JFormattedTextField txtDataNasc = new JFormattedTextField();
-		txtDataNasc.setBounds(150, 79, 150, 22);
-		panelDadosPessoais.add(txtDataNasc);
-		
-		JFormattedTextField txtCpfDados = new JFormattedTextField();
-		txtCpfDados.setBounds(371, 79, 171, 22);
-		panelDadosPessoais.add(txtCpfDados);
-		
 		JFormattedTextField txtEmailDados = new JFormattedTextField();
-		txtEmailDados.setBounds(91, 133, 451, 22);
+		txtEmailDados.setBounds(95, 133, 447, 22);
 		panelDadosPessoais.add(txtEmailDados);
 		
 		JFormattedTextField txtEnderecoDados = new JFormattedTextField();
-		txtEnderecoDados.setBounds(91, 188, 451, 22);
+		txtEnderecoDados.setBounds(95, 188, 447, 22);
 		panelDadosPessoais.add(txtEnderecoDados);
 		
 		JFormattedTextField txtMuniDados = new JFormattedTextField();
-		txtMuniDados.setBounds(86, 246, 125, 22);
+		txtMuniDados.setBounds(95, 246, 116, 22);
 		panelDadosPessoais.add(txtMuniDados);
 		
-		JFormattedTextField txtTeleDados = new JFormattedTextField();
+		JFormattedTextField txtTeleDados = new JFormattedTextField(new MaskFormatter("(##)#####-####"));
 		txtTeleDados.setBounds(397, 245, 145, 22);
 		panelDadosPessoais.add(txtTeleDados);
+		
+		JFormattedTextField txtDataNasc = new JFormattedTextField(new MaskFormatter("##/##/####"));
+		txtDataNasc.setBounds(150, 80, 150, 21);
+		panelDadosPessoais.add(txtDataNasc);
+		
+		JFormattedTextField txtCpfDados = new JFormattedTextField(new MaskFormatter("###.###.###-##"));
+		txtCpfDados.setBounds(371, 80, 171, 21);
+		panelDadosPessoais.add(txtCpfDados);
 		
 		//Tela Curso
 		JPanel panelCurso = new JPanel();
@@ -292,8 +304,8 @@ public class JanelaCadastro extends JFrame {
 		panelCurso.add(comboBoxCurso);
 		
 		String[] campus = {
-			    "","Adamantina", "Araçatuba", "Birigui", "Campinas", "Diadema", "Fernandópolis", "Guarulhos", "Marília", "Pirituba", 
-			    "Santos", "São Paulo", "Taubaté", 
+			    "","Adamantina-SP", "Araçatuba-SP", "Birigui-SP", "Campinas-SP", "Diadema-SP", "Fernandópolis-SP", "Guarulhos-SP", "Marília-SP", "Pirituba-SP", 
+			    "Santos-SP", "São Paulo-SP", "Taubaté", 
 			};
 		comboBoxCampus = new JComboBox(campus);
 		comboBoxCampus.setBounds(129, 96, 379, 22);
@@ -659,6 +671,7 @@ public class JanelaCadastro extends JFrame {
 	
 		//Tela Boletim
 		JPanel panelBoletim = new JPanel();
+		
 		tabbedPane.addTab("Boletim", null, panelBoletim, null);
 		panelBoletim.setLayout(null);
 		
@@ -690,12 +703,16 @@ public class JanelaCadastro extends JFrame {
 		
 		// Atribuindo o modelo a tabela
 		table_Boletim.setModel(modelo);
-		JButton btnPdfBoletim = new JButton("Gerar PDF");
-		btnPdfBoletim.setBounds(467, 63, 95, 23);
+		JButton btnPdfBoletim = new JButton("");
+		/*btnPdfBoletim.setBounds(467, 63, 95, 23);
+		panelBoletim.add(btnPdfBoletim);*/
+		
+		btnPdfBoletim.setIcon(redimensionarIcone("/imagens/arquivopdf.png", 32, 32));
+		btnPdfBoletim.setBounds(510, 52, 41, 39);
 		panelBoletim.add(btnPdfBoletim);
 		
 		JButton btnPesquisarBoletim = new JButton("Pesquisar");
-		btnPesquisarBoletim.setBounds(351, 63, 95, 23);
+		btnPesquisarBoletim.setBounds(379, 62, 116, 23);
 		panelBoletim.add(btnPesquisarBoletim);
 		
 		JFormattedTextField txtNomeBoletim = new JFormattedTextField();
@@ -710,13 +727,12 @@ public class JanelaCadastro extends JFrame {
 		
 		JFormattedTextField txtCursoBoletim = new JFormattedTextField();
 		txtCursoBoletim.setEditable(false);
-		txtCursoBoletim.setBounds(125, 63, 210, 22);
+		txtCursoBoletim.setBounds(125, 63, 214, 22);
 		panelBoletim.add(txtCursoBoletim);
 		
 		JFormattedTextField txtRgmBoletim = new JFormattedTextField();
-		txtRgmBoletim.setBounds(351, 22, 211, 23);
+		txtRgmBoletim.setBounds(351, 20, 211, 23);
 		panelBoletim.add(txtRgmBoletim);
-
 
 		btnPesquisarBoletim.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
@@ -759,7 +775,7 @@ public class JanelaCadastro extends JFrame {
 
 		            // Monta o nome do arquivo com nome e RGM
 		            String nomeFormatado = nomeAluno.replace(" ", "_").replaceAll("[^a-zA-Z0-9_]", "");
-		            String caminhoPDF = "C:\\Users\\Rafae\\Downloads\\Boletim_" + nomeFormatado + "_(" + rgmAluno + ").pdf";
+		            String caminhoPDF = "C:\\Users\\Lucas\\Downloads\\Boletim" + nomeFormatado + "_(" + rgmAluno + ").pdf";
 
 		            // Chama o método para gerar o PDF
 		            ExportadorPDF.exportarJTableParaPDF(table_Boletim, caminhoPDF, nomeAluno, rgmAluno);
