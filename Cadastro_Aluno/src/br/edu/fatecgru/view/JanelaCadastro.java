@@ -110,7 +110,7 @@ public class JanelaCadastro extends JFrame {
 		mntmNewMenuItem.setHorizontalAlignment(SwingConstants.LEFT);
 		mnNewMenu.add(mntmNewMenuItem);
 		
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Alterar");
+		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Novo");
 		mntmNewMenuItem_1.setHorizontalTextPosition(SwingConstants.LEFT);
 		mntmNewMenuItem_1.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mntmNewMenuItem_1.setHorizontalAlignment(SwingConstants.LEFT);
@@ -140,7 +140,7 @@ public class JanelaCadastro extends JFrame {
 		mntmNewMenuItem_4.setHorizontalAlignment(SwingConstants.LEFT);
 		mntmNewMenuItem_4.setHorizontalTextPosition(SwingConstants.LEFT);
 		mntmNewMenuItem_4.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		mntmNewMenuItem_4.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.SHIFT_DOWN_MASK));
+		mntmNewMenuItem_4.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.SHIFT_DOWN_MASK | InputEvent.ALT_DOWN_MASK, false));
 		mnNewMenu.add(mntmNewMenuItem_4);
 		
 		JMenu mnNewMenu_1 = new JMenu("Notas e Faltas");
@@ -390,9 +390,24 @@ public class JanelaCadastro extends JFrame {
 		// Botão Atualizar
 		JButton btnAtualizarCurso = new JButton("");
 		btnAtualizarCurso.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		    }
-		});
+				public void actionPerformed(ActionEvent e) {
+			                // Limpar campos da interface
+			                txtRgmDados.setText("");
+			                txtNomeDados.setText("");
+			                txtCpfDados.setText("");
+			                txtEmailDados.setText("");
+			                txtEnderecoDados.setText("");
+			                txtMuniDados.setText("");
+			                comboUFDados.setSelectedIndex(-1);
+			                txtTeleDados.setText("");
+			                txtDataNasc.setText("");
+			                comboBoxCurso.setSelectedIndex(-1);
+			                comboBoxNota.setSelectedIndex(-1);
+			                comboBoxCampus.setSelectedIndex(-1);
+			                grupoTurnos.clearSelection();
+			                txtRgmNotas.setText(""); // também limpa o outro campo
+			            }
+			    });
 		btnAtualizarCurso.setIcon(redimensionarIcone("/imagens/setas-circulares.png", 32, 32));
 		btnAtualizarCurso.setBounds(136, 236, 89, 62);
 		panelCurso.add(btnAtualizarCurso);
@@ -402,6 +417,38 @@ public class JanelaCadastro extends JFrame {
 		btnListarCurso.setIcon(redimensionarIcone("/imagens/lupa.png", 32, 32));
 		btnListarCurso.setBounds(242, 236, 89, 62);
 		panelCurso.add(btnListarCurso);
+		
+		btnListarCurso.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	String rgm = txtRgmDados.getText();
+		    	
+		    	if (!rgm.isEmpty()) {
+		    		try {
+		    			AlunoDAO dao = new AlunoDAO();
+		    			Aluno aluno = dao.pesquisar(rgm);
+		    			
+		    			if (aluno != null) {
+		    				txtNomeDados.setText(aluno.getNome());
+		    				txtEnderecoDados.setText(aluno.getEmail());
+		    				comboUFDados.setSelectedItem(aluno.getUF());
+		    				txtTeleDados.setText(aluno.getTelefone());
+		    				txtMuniDados.setText(aluno.getMunicipio());
+		    				txtDataNasc.setText(aluno.getDataNasc());
+		    				txtCpfDados.setText(aluno.getCPF());
+		    				txtEmailDados.setText(aluno.getEmail());
+		    				comboBoxCurso.setSelectedItem(aluno.getCurso());
+		    				comboBoxSemestre.setSelectedItem(aluno.getSemestre());
+		    			} else {
+		                    JOptionPane.showMessageDialog(null, "Aluno não encontrado.");
+		                }
+		    		} catch (Exception ex) {
+		    			JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());
+		    		}
+		    	} else {
+		            JOptionPane.showMessageDialog(null, "Informe o RGM.");
+		    	}
+		    }
+		});     
 
 		// Botão Excluir
 		JButton btnExcluirCurso = new JButton("");
@@ -462,6 +509,11 @@ public class JanelaCadastro extends JFrame {
 		btnSairCurso.setIcon(redimensionarIcone("/imagens/saida.png", 32, 32));
 		btnSairCurso.setBounds(449, 236, 89, 62);
 		panelCurso.add(btnSairCurso);
+		btnSairCurso.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
 
 
 		//TelaNotas e Faltas
@@ -603,10 +655,17 @@ public class JanelaCadastro extends JFrame {
 		// Botão Atualizar
 		JButton btnAtualizarNotas = new JButton("");
 		btnAtualizarNotas.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        // ação de atualizar
-		    }
-		});
+			public void actionPerformed(ActionEvent e) {
+		                // Limpar campos da interface
+		                txtRgmNotas.setText("");
+		                txtNomeNotas.setText("");
+		                txtCursoNotas.setText("");
+		                txtFaltasNota.setText("");
+		                comboBoxDisciplina.setSelectedIndex(-1);
+		                comboBoxNota.setSelectedIndex(-1);
+		                comboBoxSemestre.setSelectedIndex(-1);
+		            }
+		    });
 		btnAtualizarNotas.setIcon(redimensionarIcone("/imagens/setas-circulares.png", 32, 32));
 		btnAtualizarNotas.setBounds(139, 236, 89, 62);
 		panelNotasFaltas.add(btnAtualizarNotas);
@@ -640,7 +699,7 @@ public class JanelaCadastro extends JFrame {
 		            JOptionPane.showMessageDialog(null, "Informe o RGM.");
 		    	}
 		    }
-		});        // ação de lista
+		});       
 		    	
 		btnListarNotas.setIcon(redimensionarIcone("/imagens/lupa.png", 32, 32));
 		btnListarNotas.setBounds(245, 236, 89, 62);
@@ -649,20 +708,61 @@ public class JanelaCadastro extends JFrame {
 		// Botão Excluir
 		JButton btnExcluirNotas = new JButton("");
 		btnExcluirNotas.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        // ação de excluir
-		    }
-		});
+			 public void actionPerformed(ActionEvent e) {
+			        int confirmacao = JOptionPane.showConfirmDialog(null,
+			            "Tem certeza que deseja excluir este aluno?", "Confirmação",
+			            JOptionPane.YES_NO_OPTION);
+
+			        if (confirmacao == JOptionPane.YES_OPTION) {
+			            // Tenta obter o RGM de txtRgmDados, se estiver vazio, tenta txtRgmNotas
+			            String rgm = txtRgmDados.getText();
+			            if (rgm == null || rgm.trim().isEmpty()) {
+			                rgm = txtRgmNotas.getText();
+			            }
+
+			            // Se ainda assim estiver vazio, mostra aviso
+			            if (rgm == null || rgm.trim().isEmpty()) {
+			                JOptionPane.showMessageDialog(null, "Informe o RGM do aluno a ser excluído.");
+			                return;
+			            }
+
+			            try {
+			                AlunoDAO dao = new AlunoDAO();
+			                dao.excluirAluno(rgm);
+
+			                JOptionPane.showMessageDialog(null, "Aluno excluído com sucesso!");
+
+			                // Limpar campos da interface após exclusão
+			                txtRgmDados.setText("");
+			                txtNomeDados.setText("");
+			                txtCpfDados.setText("");
+			                txtEmailDados.setText("");
+			                txtEnderecoDados.setText("");
+			                txtMuniDados.setText("");
+			                comboUFDados.setSelectedIndex(-1);
+			                txtTeleDados.setText("");
+			                txtDataNasc.setText("");
+			                comboBoxCurso.setSelectedIndex(-1);
+			                comboBoxNota.setSelectedIndex(-1);
+			                txtRgmNotas.setText(""); // também limpa o outro campo
+
+			            } catch (Exception ex) {
+			                JOptionPane.showMessageDialog(null, "Erro ao excluir aluno: " + ex.getMessage());
+			            }
+			        }
+			    }
+			});
 		btnExcluirNotas.setIcon(redimensionarIcone("/imagens/lixo.png", 32, 32));
 		btnExcluirNotas.setBounds(349, 236, 89, 62);
 		panelNotasFaltas.add(btnExcluirNotas);
+		
 
 		// Botão Sair
 		JButton btnSairNotas = new JButton("");
 		btnSairNotas.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        // ação de sair
-		    }
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
 		});
 		btnSairNotas.setIcon(redimensionarIcone("/imagens/saida.png", 32, 32));
 		btnSairNotas.setBounds(452, 236, 89, 62);
@@ -775,7 +875,7 @@ public class JanelaCadastro extends JFrame {
 
 		            // Monta o nome do arquivo com nome e RGM
 		            String nomeFormatado = nomeAluno.replace(" ", "_").replaceAll("[^a-zA-Z0-9_]", "");
-		            String caminhoPDF = "C:\\Users\\Lucas\\Downloads\\Boletim" + nomeFormatado + "_(" + rgmAluno + ").pdf";
+		            String caminhoPDF = "C:\\Users\\Rafae\\Downloads\\Boletim " + nomeFormatado + "_(" + rgmAluno + ").pdf";
 
 		            // Chama o método para gerar o PDF
 		            ExportadorPDF.exportarJTableParaPDF(table_Boletim, caminhoPDF, nomeAluno, rgmAluno);

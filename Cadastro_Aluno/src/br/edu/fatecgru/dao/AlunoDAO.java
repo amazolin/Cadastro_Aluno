@@ -392,6 +392,46 @@ public class AlunoDAO {
 	        }
 	    }
 	}
+	public Aluno buscarDadosAlunoDados(String rgm) throws Exception {
+	    String sqlDados = "SELECT Nome, Endereco, UF, Telefone, Municipio, DataNasc, CPF, Email FROM tbaluno WHERE RGM = ?";
+	    String sqlCurso = "SELECT nome_curso, semestre FROM tbcurso WHERE aluno_rgm = ?";
+
+	    try (Connection conn = ConnectionFactory.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sqlDados)) {
+
+	        stmt.setString(1, rgm);
+	        ResultSet rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            Aluno aluno = new Aluno();
+	            aluno.setRGM(rgm);
+	            aluno.setNome(rs.getString("Nome"));
+	            aluno.setEndereco(rs.getString("Endereco"));
+	            aluno.setUF(rs.getString("UF"));
+	            aluno.setTelefone(rs.getString("Telefone"));
+	            aluno.setMunicipio(rs.getString("Municipio"));
+	            aluno.setDataNasc(rs.getString("DataNasc"));
+	            aluno.setCPF(rs.getString("CPF"));
+	            aluno.setEmail(rs.getString("Email"));
+
+	            // Agora buscar os dados do curso
+	            try (PreparedStatement psCurso = conn.prepareStatement(sqlCurso)) {
+	                psCurso.setString(1, rgm);
+	                ResultSet rs1 = psCurso.executeQuery();
+
+	                if (rs1.next()) {
+	                    aluno.setCurso(rs1.getString("nome_curso"));
+	                    aluno.setSemestre(rs1.getString("semestre"));
+	                }
+	            }
+
+	            return aluno;
+
+	        } else {
+	            return null;
+	        }
+	    }
+	}
 	public void pesquisarBoletimDoAluno(String rgm, JTable tableBoletim) throws Exception {
 	    String sql = """
 	        SELECT d.nome_disciplina, nf.nota, nf.falta
