@@ -83,17 +83,20 @@ public class AlunoDAO {
 	        throw new Exception("O CPF não pode ser nulo ou vazio");
 	    }
 
-	    String SQLAluno = "INSERT INTO tbaluno (Nome, RGM, DataNasc, CPF, Email, Endereco, Municipio, UF, Telefone) "
-	                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	    // SQL para inserção do aluno
+	    String SQLAluno = "INSERT INTO tbaluno (Nome, RGM, DataNasc, CPF, Email, Endereco, Municipio, UF, Telefone, Campus, Turno) "
+	                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-	    String SQLCursoAluno = "INSERT INTO tbcurso (aluno_rgm, nome_curso)" + " VALUES (?, ?)";
-	    
-	    String SQLNotaFalta = "INSERT INTO tbnotas_faltas ( aluno_rgm, nota , falta )" + " VALUES (?, ?, ?)";
+	    // SQL para inserção do aluno no curso
+	    String SQLCursoAluno = "INSERT INTO tbcurso (aluno_rgm, nome_curso) VALUES (?, ?)";
+
+	    // SQL para inserir dados na tabela de notas e faltas
+	    String SQLNotaFalta = "INSERT INTO tbnotas_faltas (aluno_rgm, nota, falta, idDisciplina) VALUES (?, ?, ?, ?)";
 
 	    try {
 	        conn.setAutoCommit(false); // Desativa autocommit para controle manual
 
-	        // Inserção na tabela de aluno
+	        // Inserção do aluno na tabela `tbaluno`
 	        try (PreparedStatement ps = conn.prepareStatement(SQLAluno)) {
 	            ps.setString(1, aluno.getNome());
 	            ps.setString(2, aluno.getRGM());
@@ -104,31 +107,52 @@ public class AlunoDAO {
 	            ps.setString(7, aluno.getMunicipio());
 	            ps.setString(8, aluno.getUF());
 	            ps.setString(9, aluno.getTelefone());
+	            ps.setString(10, aluno.getCampus()); // Campus
+	            ps.setString(11, aluno.getPeriodo()); // Período
 	            ps.executeUpdate();
 	        }
 
-	        // Inserção na tabela de curso (ajuste se for relacionamento, como curso_aluno)
+	        // Inserção na tabela `tbcurso` (associar aluno ao curso)
 	        try (PreparedStatement psCurso = conn.prepareStatement(SQLCursoAluno)) {
 	            psCurso.setString(1, aluno.getRGM());
-	        	psCurso.setString(2, aluno.getCurso());               
-
+	            psCurso.setString(2, aluno.getCurso()); // Nome do curso do aluno
 	            psCurso.executeUpdate();
 	        }
-	        
-	        try (PreparedStatement psNotas = conn.prepareStatement(SQLNotaFalta)){
-	        	psNotas.setString(1, aluno.getRGM());
-	        	psNotas.setDouble(2, aluno.getNota());
-	        	psNotas.setInt(3, aluno.getFalta());
-	        	
-	        	
-	        	psNotas.executeUpdate();
+
+	        // Recuperar o ID do curso associado ao nome do curso
+	        String SQLCursoID = "SELECT idCurso FROM tbcurso WHERE nome_curso = ?";
+	        int idCurso = 0;
+	        try (PreparedStatement psCursoID = conn.prepareStatement(SQLCursoID)) {
+	            psCursoID.setString(1, aluno.getCurso());
+	            ResultSet rsCurso = psCursoID.executeQuery();
+	            if (rsCurso.next()) {
+	                idCurso = rsCurso.getInt("idCurso");
+	            } else {
+	                throw new Exception("Curso não encontrado: " + aluno.getCurso());
+	            }
 	        }
-	        
+
+	        // Recuperar as disciplinas associadas ao curso do aluno
+	        String SQLDisciplinas = "SELECT idDisciplina FROM tbdisciplinas WHERE idCurso = ?";
+	        try (PreparedStatement psDisciplinas = conn.prepareStatement(SQLDisciplinas)) {
+	            psDisciplinas.setInt(1, idCurso); // Usa o idCurso para encontrar as disciplinas do curso
+	            ResultSet rs = psDisciplinas.executeQuery();
+
+	            // Inserir as disciplinas na tabela `tbnotas_faltas`
+	            try (PreparedStatement psNotas = conn.prepareStatement(SQLNotaFalta)) {
+	                while (rs.next()) {
+	                    int idDisciplina = rs.getInt("idDisciplina");
+	                    psNotas.setString(1, aluno.getRGM()); // RGM do aluno
+	                    psNotas.setDouble(2, 0.0); // Inicializa a nota como 0
+	                    psNotas.setInt(3, 0); // Inicializa a falta como 0
+	                    psNotas.setInt(4, idDisciplina); // idDisciplina
+	                    psNotas.addBatch(); // Adiciona a operação ao batch
+	                }
+	                psNotas.executeBatch(); // Executa todas as inserções de uma vez
+	            }
+	        }
 
 	        conn.commit(); // Tudo certo, confirma
-	        
-	        
-	       
 
 	    } catch (SQLException sqle) {
 	        if (conn != null) {
@@ -149,9 +173,10 @@ public class AlunoDAO {
 	            throw new Exception("Erro ao fechar a conexão: " + e.getMessage(), e);
 	        }
 	    }
+
 	    System.out.println("Nome do aluno: " + aluno.getNome());
-	    
 	}
+
 
 	public Aluno pesquisar(String rgm) throws Exception {
     	
@@ -393,7 +418,7 @@ public class AlunoDAO {
 	    }
 	}
 	public Aluno buscarDadosAlunoDados(String rgm) throws Exception {
-	    String sqlDados = "SELECT Nome, Endereco, UF, Telefone, Municipio, DataNasc, CPF, Email FROM tbaluno WHERE RGM = ?";
+	    String sqlDados = "SELECT Nome, Endereco, UF, Telefone, Municipio, DataNasc, CPF, Email, Campus, Turno FROM tbaluno WHERE RGM = ?";
 	    String sqlCurso = "SELECT nome_curso, semestre FROM tbcurso WHERE aluno_rgm = ?";
 
 	    try (Connection conn = ConnectionFactory.getConnection();
@@ -413,6 +438,8 @@ public class AlunoDAO {
 	            aluno.setDataNasc(rs.getString("DataNasc"));
 	            aluno.setCPF(rs.getString("CPF"));
 	            aluno.setEmail(rs.getString("Email"));
+	            aluno.setPeriodo(rs.getString("Turno"));
+	            aluno.setCampus(rs.getString("Campus"));
 
 	            // Agora buscar os dados do curso
 	            try (PreparedStatement psCurso = conn.prepareStatement(sqlCurso)) {
@@ -433,6 +460,7 @@ public class AlunoDAO {
 	    }
 	}
 	public void pesquisarBoletimDoAluno(String rgm, JTable tableBoletim) throws Exception {
+	    // Definindo a consulta SQL para pegar a disciplina, nota e falta
 	    String sql = """
 	        SELECT d.nome_disciplina, nf.nota, nf.falta
 	        FROM tbnotas_faltas nf
@@ -446,10 +474,24 @@ public class AlunoDAO {
 	        stmt.setString(1, rgm);
 	        ResultSet rs = stmt.executeQuery();
 
+	        // Cria ou obtém o modelo da tabela
 	        DefaultTableModel model = (DefaultTableModel) tableBoletim.getModel();
-	        model.setRowCount(0); // Limpa a tabela
+
+	        // Define as colunas apenas uma vez, caso ainda não tenha sido feito
+	        if (model.getColumnCount() == 0) {
+	            model.addColumn("Disciplina"); // Corrigi para "Disciplina"
+	            model.addColumn("Nota"); // Corrigi para "Nota"
+	            model.addColumn("Falta"); // Corrigi para "Falta"
+	        }
+
+	        // Limpa as linhas da tabela antes de adicionar novos dados
+	        model.setRowCount(0);
+
+	        // Adiciona os dados à tabela
+	        boolean dadosEncontrados = false;  // Variável de controle para verificar se há dados
 
 	        while (rs.next()) {
+	            dadosEncontrados = true;
 	            model.addRow(new Object[]{
 	                rs.getString("nome_disciplina"),
 	                rs.getDouble("nota"),
@@ -457,6 +499,14 @@ public class AlunoDAO {
 	            });
 	        }
 
+	        // Se não houver dados, mostramos uma mensagem
+	        if (!dadosEncontrados) {
+	            JOptionPane.showMessageDialog(null, "Nenhuma disciplina encontrada para este RGM.");
+	        }
+
+	    } catch (SQLException e) {
+	        // Exceção em caso de erro no banco de dados
+	        throw new Exception("Erro ao buscar boletim do aluno: " + e.getMessage(), e);
 	    }
 	}
 

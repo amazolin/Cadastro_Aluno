@@ -24,8 +24,12 @@ public class Aluno {
 		
 	}
 
+
+
 	public Aluno(String nome, String rGM, String endereco, String dataNasc, String municipio, String uF, String email,
-			String telefone, String semestre, String disciplina, String curso, String cpf, String campus, String periodo, double nota, int falta) {
+			String telefone, String semestre, String curso, String campus, String cPF, String periodo,
+			double nota, int falta, String disciplina) {
+		super();
 		Nome = nome;
 		RGM = rGM;
 		Endereco = endereco;
@@ -37,12 +41,14 @@ public class Aluno {
 		Semestre = semestre;
 		Curso = curso;
 		Campus = campus;
+		CPF = cPF;
 		Periodo = periodo;
 		Nota = nota;
 		Falta = falta;
 		Disciplina = disciplina;
-		CPF = cpf;
 	}
+
+
 
 	public String getNome() {
 		return Nome;
@@ -171,5 +177,7 @@ public class Aluno {
 	public void setDisciplina(String disciplina) {
 		Disciplina = disciplina;
 	}
+
+	
 
 }
