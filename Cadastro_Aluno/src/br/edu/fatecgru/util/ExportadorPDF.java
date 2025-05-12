@@ -6,6 +6,7 @@ import com.itextpdf.text.pdf.*;
 import javax.swing.*;
 import java.io.FileOutputStream;
 
+// BAIXAR ARQUIVO DAR BUILD PATH
 public class ExportadorPDF {
 
     public static void exportarJTableParaPDF(JTable tabela, String caminhoPDF, String nomeAluno, String rgmAluno) {
