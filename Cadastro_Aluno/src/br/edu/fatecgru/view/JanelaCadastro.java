@@ -425,7 +425,7 @@ public class JanelaCadastro extends JFrame {
 		    	if (!rgm.isEmpty()) {
 		    		try {
 		    			AlunoDAO dao = new AlunoDAO();
-		    			Aluno aluno = dao.pesquisar(rgm);
+		    			Aluno aluno = dao.buscarDadosAlunoDados(rgm);
 		    			
 		    			if (aluno != null) {
 		    				txtNomeDados.setText(aluno.getNome());
@@ -436,6 +436,7 @@ public class JanelaCadastro extends JFrame {
 		    				txtDataNasc.setText(aluno.getDataNasc());
 		    				txtCpfDados.setText(aluno.getCPF());
 		    				txtEmailDados.setText(aluno.getEmail());
+		    				comboBoxCampus.setSelectedItem(aluno.getCampus());
 		    				comboBoxCurso.setSelectedItem(aluno.getCurso());
 		    				comboBoxSemestre.setSelectedItem(aluno.getSemestre());
 		    			} else {
