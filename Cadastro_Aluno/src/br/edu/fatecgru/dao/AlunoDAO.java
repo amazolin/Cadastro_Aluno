@@ -42,19 +42,22 @@ public class AlunoDAO {
         return cursos;
     }
 
-    public List<String> carregarDisciplinasPorCurso(int idCurso) throws SQLException {
-        List<String> disciplinas = new ArrayList<>();
-        String sql = "SELECT nome_disciplina FROM tbdisciplinas WHERE idCurso = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idCurso);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    disciplinas.add(rs.getString("nome_disciplina"));
-                }
-            }
-        }
-        return disciplinas;
-    }
+	public List<String> carregarDisciplinasPorCurso(int idCurso) throws SQLException {
+	    List<String> disciplinas = new ArrayList<>();
+	    String sql = "SELECT nome_disciplina FROM tbdisciplinas WHERE idCurso = ?";
+	    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+	        ps.setInt(1, idCurso);
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
+	                String nomeDisciplina = rs.getString("nome_disciplina");
+	                System.out.println("Disciplina encontrada para o ID " + idCurso + ": " + nomeDisciplina); // LOG
+	                disciplinas.add(nomeDisciplina);
+	            }
+	        }
+	    }
+	    System.out.println("Disciplinas encontradas para o ID " + idCurso + ": " + disciplinas); // LOG
+	    return disciplinas;
+	}
 	
 	
 	public AlunoDAO() throws Exception{
@@ -179,64 +182,74 @@ public class AlunoDAO {
 
 
 	public Aluno pesquisar(String rgm) throws Exception {
-    	
-		String SQLAluno = "SELECT nome FROM tbaluno WHERE RGM = ?";
-		String SQLNotaFalta = "SELECT nota, falta FROM tbnotas_faltas WHERE aluno_rgm = ?";
-		String SQLCurso = "SELECT nome_curso FROM tbcurso WHERE aluno_rgm = ?";
-    	
+	    String SQLAluno = "SELECT nome FROM tbaluno WHERE RGM = ?";
+	    String SQLNotaFalta = "SELECT nota, falta FROM tbnotas_faltas WHERE aluno_rgm = ?";
+	    // Modifique esta consulta para buscar o idCurso pelo nome_curso
+	    String SQLCursoInfo = """
+	                          SELECT tc.nome_curso
+	                          FROM tbcurso tc
+	                          WHERE tc.aluno_rgm = ?
+	                          """;
+	    String SQLCursoId = "SELECT idCurso FROM tbcurso WHERE nome_curso = ?";
+
 	    Aluno aluno = new Aluno();
 	    aluno.setRGM(rgm);
-	    
-	    try(PreparedStatement psAluno = conn.prepareStatement(SQLAluno)){
-	    	psAluno.setString(1, aluno.getRGM());
-	    	ResultSet rs = psAluno.executeQuery();
-	    	if (rs.next()) {
-	    		aluno.setNome(rs.getString("Nome"));
-	    		}
-		    }
-	    
-	    try (PreparedStatement psCurso = conn.prepareStatement(SQLCurso)) {
-	    	psCurso.setString(1, aluno.getRGM());
-	    	ResultSet rs = psCurso.executeQuery();
-	    	
-	    	if (rs.next()) {
-	    		aluno.setCurso(rs.getString("nome_curso"));
-	    	}
-	    }
-	    
-    	try (PreparedStatement psNotas = conn.prepareStatement(SQLNotaFalta)) {
-	    	psNotas.setString(1, aluno.getRGM());
-	    	ResultSet rs = psNotas.executeQuery();
-	    	
-	    	if (rs.next()) {
-	            aluno.setNota(rs.getFloat("nota"));
-	            aluno.setFalta(rs.getInt("falta"));
-	    	} else {
-	    		aluno.setNota(0);
-	    		aluno.setFalta(0);
-	    	}
-	    	
-	    } catch (SQLException sqle) {
-	        throw new Exception("Erro ao buscar aluno: " + sqle.getMessage(), sqle);
-	    }
-    	System.out.println("Nome do aluno: " + aluno.getNome());
-    	return aluno;
-	}	
 
-	private int obterCursoId(String rgmAluno) throws SQLException {
-	    String sql = "SELECT idCurso FROM tbcurso WHERE aluno_rgm = ?";
-	    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-	        ps.setString(1, rgmAluno);
-	        try (ResultSet rs = ps.executeQuery()) {
-	            if (rs.next()) {
-	                return rs.getInt("idCurso");
+	    try(PreparedStatement psAluno = conn.prepareStatement(SQLAluno)){
+	        psAluno.setString(1, aluno.getRGM());
+	        ResultSet rs = psAluno.executeQuery();
+	        if (rs.next()) {
+	            aluno.setNome(rs.getString("Nome"));
+	        }
+	    }
+
+	    String nomeCursoAluno = null;
+	    try (PreparedStatement psCursoInfo = conn.prepareStatement(SQLCursoInfo)) {
+	        psCursoInfo.setString(1, aluno.getRGM());
+	        ResultSet rsCursoInfo = psCursoInfo.executeQuery();
+	        if (rsCursoInfo.next()) {
+	            nomeCursoAluno = rsCursoInfo.getString("nome_curso");
+	            aluno.setCurso(nomeCursoAluno);
+	        } else {
+	            System.out.println("Nenhum curso encontrado para o RGM: " + rgm);
+	            aluno.setIdCurso(0); // Ou algum valor padrão
+	            return aluno; // Se não encontrar o curso, não precisa continuar
+	        }
+	    }
+
+	    if (nomeCursoAluno != null) {
+	        try (PreparedStatement psCursoId = conn.prepareStatement(SQLCursoId)) {
+	            psCursoId.setString(1, nomeCursoAluno);
+	            ResultSet rsCursoId = psCursoId.executeQuery();
+	            if (rsCursoId.next()) {
+	                aluno.setIdCurso(rsCursoId.getInt("idCurso"));
+	                System.out.println("ID do Curso (pelo nome) lido do banco: " + aluno.getIdCurso());
 	            } else {
-	                throw new SQLException("Curso não encontrado para o aluno RGM: " + rgmAluno);
+	                System.out.println("ID do Curso não encontrado para o nome: " + nomeCursoAluno);
+	                aluno.setIdCurso(0); // Ou algum valor padrão
 	            }
 	        }
 	    }
+
+
+	    try (PreparedStatement psNotas = conn.prepareStatement(SQLNotaFalta)) {
+	        psNotas.setString(1, aluno.getRGM());
+	        ResultSet rs = psNotas.executeQuery();
+
+	        if (rs.next()) {
+	            aluno.setNota(rs.getFloat("nota"));
+	            aluno.setFalta(rs.getInt("falta"));
+	        } else {
+	            aluno.setNota(0);
+	            aluno.setFalta(0);
+	        }
+
+	    } catch (SQLException sqle) {
+	        throw new Exception("Erro ao buscar aluno: " + sqle.getMessage(), sqle);
+	    }
+	    System.out.println("Nome do aluno: " + aluno.getNome());
+	    return aluno;
 	}
-	
 	private int obterDisciplinaId(String nomeDisciplina) throws SQLException {
 	    // Consulta para obter o id da disciplina pelo nome
 	    String sql = "SELECT idDisciplina FROM tbdisciplinas WHERE nome_disciplina = ?";

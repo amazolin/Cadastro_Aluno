@@ -24,6 +24,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import java.awt.event.InputEvent;
 import javax.swing.JSeparator;
 import java.awt.Color;
@@ -412,58 +413,7 @@ public class JanelaCadastro extends JFrame {
 		});     
 
 		// Botão Excluir
-		JButton btnExcluirCurso = new JButton("");
-		btnExcluirCurso.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        int confirmacao = JOptionPane.showConfirmDialog(null,
-		            "Tem certeza que deseja excluir este aluno?", "Confirmação",
-		            JOptionPane.YES_NO_OPTION);
 
-		        if (confirmacao == JOptionPane.YES_OPTION) {
-		            // Tenta obter o RGM de txtRgmDados, se estiver vazio, tenta txtRgmNotas
-		            String rgm = txtRgmDados.getText();
-		            if (rgm == null || rgm.trim().isEmpty()) {
-		                rgm = txtRgmNotas.getText();
-		            }
-
-		            // Se ainda assim estiver vazio, mostra aviso
-		            if (rgm == null || rgm.trim().isEmpty()) {
-		                JOptionPane.showMessageDialog(null, "Informe o RGM do aluno a ser excluído.");
-		                return;
-		            }
-
-		            try {
-		                AlunoDAO dao = new AlunoDAO();
-		                dao.excluirAluno(rgm);
-
-		                JOptionPane.showMessageDialog(null, "Aluno excluído com sucesso!");
-
-		                // Limpar campos da interface após exclusão
-		                txtRgmDados.setText("");
-		                txtNomeDados.setText("");
-		                txtCpfDados.setText("");
-		                txtEmailDados.setText("");
-		                txtEnderecoDados.setText("");
-		                txtMuniDados.setText("");
-		                comboUFDados.setSelectedIndex(-1);
-		                txtTeleDados.setText("");
-		                txtDataNasc.setText("");
-		                comboBoxCurso.setSelectedIndex(-1);
-		                comboBoxNota.setSelectedIndex(-1);
-		                txtRgmNotas.setText(""); // também limpa o outro campo
-
-		            } catch (Exception ex) {
-		                JOptionPane.showMessageDialog(null, "Erro ao excluir aluno: " + ex.getMessage());
-		            }
-		        }
-		    }
-		});
-
-
-
-		btnExcluirCurso.setIcon(redimensionarIcone("/imagens/lixo.png", 32, 32));
-		btnExcluirCurso.setBounds(346, 236, 89, 62);
-		panelCurso.add(btnExcluirCurso);
 
 		// Botão Sair
 		JButton btnSairCurso = new JButton("");
@@ -635,32 +585,47 @@ public class JanelaCadastro extends JFrame {
 		JButton btnListarNotas = new JButton("");
 		btnListarNotas.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	String rgm = txtRgmNotas.getText();
-		    	
-		    	if (!rgm.isEmpty()) {
-		    		try {
-		    			AlunoDAO dao = new AlunoDAO();
-		    			Aluno aluno = dao.pesquisar(rgm);
-		    			
-		    			if (aluno != null) {
-		    				txtNomeNotas.setText(aluno.getNome());
-		    				comboBoxCurso.setSelectedItem(aluno.getCurso());
-		    				txtCursoNotas.setText(aluno.getCurso());
-		    				comboBoxDisciplina.setSelectedItem(aluno.getDisciplina());
-		    				comboBoxSemestre.setSelectedItem(aluno.getSemestre());
-		    				comboBoxNota.setSelectedItem(aluno.getNota());
-		    				txtFaltasNota.setText(String.valueOf(aluno.getFalta()));
-		    			} else {
+		        String rgm = txtRgmNotas.getText();
+
+		        if (!rgm.isEmpty()) {
+		            try {
+		                AlunoDAO dao = new AlunoDAO();
+		                Aluno aluno = dao.pesquisar(rgm);
+
+		                if (aluno != null) {
+		                    txtNomeNotas.setText(aluno.getNome());
+		                    comboBoxCurso.setSelectedItem(aluno.getCurso());
+		                    txtCursoNotas.setText(aluno.getCurso());
+		                    // comboBoxDisciplina.setSelectedItem(aluno.getDisciplina()); // Remova ou comente esta linha
+		                    comboBoxSemestre.setSelectedItem(aluno.getSemestre());
+		                    comboBoxNota.setSelectedItem(aluno.getNota());
+		                    txtFaltasNota.setText(String.valueOf(aluno.getFalta()));
+
+		                    int idCursoAluno = aluno.getIdCurso();
+		                    System.out.println("ID do Curso para buscar disciplinas: " + idCursoAluno); // LOG
+
+		                    List<String> disciplinasDoCurso = dao.carregarDisciplinasPorCurso(idCursoAluno);
+
+		                    comboBoxDisciplina.removeAllItems();
+		                    for (String disciplina : disciplinasDoCurso) {
+		                        comboBoxDisciplina.addItem(disciplina);
+		                    }
+
+		                } else {
 		                    JOptionPane.showMessageDialog(null, "Aluno não encontrado.");
+		                    comboBoxDisciplina.removeAllItems();
 		                }
-		    		} catch (Exception ex) {
-		    			JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());
-		    		}
-		    	} else {
+		            } catch (Exception ex) {
+		                JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());
+		                ex.printStackTrace();
+		                comboBoxDisciplina.removeAllItems();
+		            }
+		        } else {
 		            JOptionPane.showMessageDialog(null, "Informe o RGM.");
-		    	}
+		            comboBoxDisciplina.removeAllItems();
+		        }
 		    }
-		});       
+		});   
 		    	
 		btnListarNotas.setIcon(redimensionarIcone("/imagens/lupa.png", 32, 32));
 		btnListarNotas.setBounds(245, 236, 89, 62);
@@ -694,18 +659,10 @@ public class JanelaCadastro extends JFrame {
 			                JOptionPane.showMessageDialog(null, "Aluno excluído com sucesso!");
 
 			                // Limpar campos da interface após exclusão
-			                txtRgmDados.setText("");
-			                txtNomeDados.setText("");
-			                txtCpfDados.setText("");
-			                txtEmailDados.setText("");
-			                txtEnderecoDados.setText("");
-			                txtMuniDados.setText("");
-			                comboUFDados.setSelectedIndex(-1);
-			                txtTeleDados.setText("");
-			                txtDataNasc.setText("");
-			                comboBoxCurso.setSelectedIndex(-1);
+			                txtFaltasNota.setText("");
+			                comboBoxDisciplina.setSelectedIndex(-1);
 			                comboBoxNota.setSelectedIndex(-1);
-			                txtRgmNotas.setText(""); // também limpa o outro campo
+			                comboBoxSemestre.setSelectedIndex(-1);
 
 			            } catch (Exception ex) {
 			                JOptionPane.showMessageDialog(null, "Erro ao excluir aluno: " + ex.getMessage());
@@ -1033,9 +990,15 @@ public class JanelaCadastro extends JFrame {
 		                comboUFDados.setSelectedIndex(-1);
 		                txtTeleDados.setText("");
 		                txtDataNasc.setText("");
+		                txtNomeNotas.setText("");
+		                txtCursoNotas.setText("");
 		                comboBoxCurso.setSelectedIndex(-1);
+		                comboBoxCampus.setSelectedIndex(-1);
+		                comboBoxDisciplina.setSelectedIndex(-1);
+		                comboBoxSemestre.setSelectedIndex(-1);
 		                comboBoxNota.setSelectedIndex(-1);
-		                txtRgmNotas.setText(""); // também limpa o outro campo
+		                grupoTurnos.clearSelection();
+		                txtRgmNotas.setText("");
 
 		            } catch (Exception ex) {
 		                JOptionPane.showMessageDialog(null, "Erro ao excluir aluno: " + ex.getMessage());
@@ -1117,19 +1080,13 @@ public class JanelaCadastro extends JFrame {
 		mntmNewMenuItem_6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Limpar campos da interface
-                txtRgmDados.setText("");
-                txtNomeDados.setText("");
-                txtCpfDados.setText("");
-                txtEmailDados.setText("");
-                txtEnderecoDados.setText("");
-                txtMuniDados.setText("");
-                comboUFDados.setSelectedIndex(-1);
-                txtTeleDados.setText("");
-                txtDataNasc.setText("");
-                comboBoxCurso.setSelectedIndex(-1);
+                txtRgmNotas.setText("");
+                txtCursoNotas.setText("");
+                txtNomeNotas.setText("");
+				comboBoxDisciplina.setSelectedIndex(-1);
                 comboBoxNota.setSelectedIndex(-1);
-                comboBoxCampus.setSelectedIndex(-1);
-                grupoTurnos.clearSelection();
+                comboBoxSemestre.setSelectedIndex(-1);
+                txtFaltasNota.setText("");
                 txtRgmNotas.setText(""); // também limpa o outro campo
 				
 			}
@@ -1167,18 +1124,10 @@ public class JanelaCadastro extends JFrame {
 		                JOptionPane.showMessageDialog(null, "Aluno excluído com sucesso!");
 
 		                // Limpar campos da interface após exclusão
-		                txtRgmDados.setText("");
-		                txtNomeDados.setText("");
-		                txtCpfDados.setText("");
-		                txtEmailDados.setText("");
-		                txtEnderecoDados.setText("");
-		                txtMuniDados.setText("");
-		                comboUFDados.setSelectedIndex(-1);
-		                txtTeleDados.setText("");
-		                txtDataNasc.setText("");
-		                comboBoxCurso.setSelectedIndex(-1);
+		                txtFaltasNota.setText("");
+		                comboBoxDisciplina.setSelectedIndex(-1);
 		                comboBoxNota.setSelectedIndex(-1);
-		                txtRgmNotas.setText(""); // também limpa o outro campo
+		                comboBoxSemestre.setSelectedIndex(-1);
 
 		            } catch (Exception ex) {
 		                JOptionPane.showMessageDialog(null, "Erro ao excluir aluno: " + ex.getMessage());
@@ -1251,5 +1200,62 @@ public class JanelaCadastro extends JFrame {
 		mntmNewMenuItem_8.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mnNewMenu_1.add(mntmNewMenuItem_8);
 		
+		JButton btnExcluirCurso = new JButton("");
+		btnExcluirCurso.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        int confirmacao = JOptionPane.showConfirmDialog(null,
+		            "Tem certeza que deseja excluir este aluno?", "Confirmação",
+		            JOptionPane.YES_NO_OPTION);
+
+		        if (confirmacao == JOptionPane.YES_OPTION) {
+		            // Tenta obter o RGM de txtRgmDados, se estiver vazio, tenta txtRgmNotas
+		            String rgm = txtRgmDados.getText();
+		            if (rgm == null || rgm.trim().isEmpty()) {
+		                rgm = txtRgmNotas.getText();
+		            }
+
+		            // Se ainda assim estiver vazio, mostra aviso
+		            if (rgm == null || rgm.trim().isEmpty()) {
+		                JOptionPane.showMessageDialog(null, "Informe o RGM do aluno a ser excluído.");
+		                return;
+		            }
+
+		            try {
+		                AlunoDAO dao = new AlunoDAO();
+		                dao.excluirAluno(rgm);
+
+		                JOptionPane.showMessageDialog(null, "Aluno excluído com sucesso!");
+
+		                // Limpar campos da interface após exclusão
+		                txtRgmDados.setText("");
+		                txtNomeDados.setText("");
+		                txtCpfDados.setText("");
+		                txtEmailDados.setText("");
+		                txtEnderecoDados.setText("");
+		                txtMuniDados.setText("");
+		                comboUFDados.setSelectedIndex(-1);
+		                txtTeleDados.setText("");
+		                txtDataNasc.setText("");
+		                txtNomeNotas.setText("");
+		                txtCursoNotas.setText("");
+		                comboBoxCurso.setSelectedIndex(-1);
+		                comboBoxCampus.setSelectedIndex(-1);
+		                comboBoxDisciplina.setSelectedIndex(-1);
+		                comboBoxSemestre.setSelectedIndex(-1);
+		                comboBoxNota.setSelectedIndex(-1);
+		                grupoTurnos.clearSelection();
+		                txtRgmNotas.setText(""); // também limpa o outro campo
+
+		            } catch (Exception ex) {
+		                JOptionPane.showMessageDialog(null, "Erro ao excluir aluno: " + ex.getMessage());
+		            }
+		        }
+		    }
+		});
+		btnExcluirCurso.setIcon(redimensionarIcone("/imagens/lixo.png", 32, 32));
+		btnExcluirCurso.setBounds(346, 236, 89, 62);
+		panelCurso.add(btnExcluirCurso);
+		
 	}
+		
 }

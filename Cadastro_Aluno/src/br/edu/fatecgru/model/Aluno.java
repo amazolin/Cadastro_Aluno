@@ -18,18 +18,16 @@ public class Aluno {
 	private double Nota;
 	private int Falta;
 	private String Disciplina;
+	private int idCurso;
 	
 	
 	public Aluno() {
 		
 	}
 
-
-
 	public Aluno(String nome, String rGM, String endereco, String dataNasc, String municipio, String uF, String email,
-			String telefone, String semestre, String curso, String campus, String cPF, String periodo,
-			double nota, int falta, String disciplina) {
-		super();
+			String telefone, String semestre, String curso, String campus, String cPF, String periodo, double nota,
+			int falta, String disciplina, int idCurso) {
 		Nome = nome;
 		RGM = rGM;
 		Endereco = endereco;
@@ -46,9 +44,8 @@ public class Aluno {
 		Nota = nota;
 		Falta = falta;
 		Disciplina = disciplina;
+		this.idCurso = idCurso;
 	}
-
-
 
 	public String getNome() {
 		return Nome;
@@ -176,6 +173,14 @@ public class Aluno {
 
 	public void setDisciplina(String disciplina) {
 		Disciplina = disciplina;
+	}
+
+	public int getIdCurso() {
+		return idCurso;
+	}
+
+	public void setIdCurso(int idCurso) {
+		this.idCurso = idCurso;
 	}
 
 	
