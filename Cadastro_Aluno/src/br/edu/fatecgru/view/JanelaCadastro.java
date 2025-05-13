@@ -278,8 +278,10 @@ public class JanelaCadastro extends JFrame {
 		JButton btnSalvarCurso = new JButton("");
 
 		btnSalvarCurso.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        try {
+			public void actionPerformed(ActionEvent e) {
+
+	        	
+	        	try {
 		            Aluno aluno = new Aluno();
 		            aluno.setNome(txtNomeDados.getText());
 		            aluno.setRGM(txtRgmDados.getText());
@@ -305,6 +307,14 @@ public class JanelaCadastro extends JFrame {
 		            } else {
 		                throw new Exception("Por favor, selecione um turno.");
 		            }
+					 if (txtNomeDados.getText().equals("") ||txtRgmDados.getText().equals("") || txtCpfDados.getText().equals("   .   .   -  ")|| txtDataNasc.getText().equals("")||txtEmailDados.getText().equals("")||
+				        		txtTeleDados.getText().equals("")||txtEnderecoDados.getText().equals("") ||
+				        		txtMuniDados.getText().equals("")||comboUFDados.getSelectedItem().equals("UF")||
+				        		comboBoxCurso.getSelectedItem().equals("")||
+				        		comboBoxCampus.getSelectedItem().equals("")|| rdbtnMatutino.isSelected() == false && rdbtnVespertino.isSelected() == false && rdbtnNoturno.isSelected() == false) {
+				        	JOptionPane.showMessageDialog(null, "Nada pode ser nulo");
+				        	
+				        } else {
 
 		            aluno.setPeriodo(turnoSelecionado);
 
@@ -313,12 +323,14 @@ public class JanelaCadastro extends JFrame {
 		            dao.salvar(aluno);
 
 		            JOptionPane.showMessageDialog(null, "Aluno salvo com sucesso!");
-
+				        }
 		        } catch (Exception ex) {
 		            JOptionPane.showMessageDialog(null, "Erro ao salvar aluno: " + ex.getMessage());
 		        }
-		    }
-		});
+	        	
+	        }
+		
+});
 
 
 		btnSalvarCurso.setIcon(redimensionarIcone("/imagens/salvararquivo.png", 32, 32));
@@ -506,6 +518,7 @@ public class JanelaCadastro extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 		        // Criação do objeto aluno
 		        Aluno aluno = new Aluno();
+		       
 
 		        // Captura dos dados do aluno
 		        aluno.setNome(txtNomeNotas.getText()); // Nome do aluno
@@ -815,45 +828,57 @@ public class JanelaCadastro extends JFrame {
 		JMenuItem mntmNewMenuItem = new JMenuItem("Salvar");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-		            Aluno aluno = new Aluno();
-		            aluno.setNome(txtNomeDados.getText());
-		            aluno.setRGM(txtRgmDados.getText());
-		            aluno.setDataNasc(txtDataNasc.getText());
-		            aluno.setCPF(txtCpfDados.getText());
-		            aluno.setEmail(txtEmailDados.getText());
-		            aluno.setEndereco(txtEnderecoDados.getText());
-		            aluno.setMunicipio(txtMuniDados.getText());
-		            aluno.setUF(comboUFDados.getSelectedItem().toString());
-		            aluno.setTelefone(txtTeleDados.getText());
-		            aluno.setCurso(comboBoxCurso.getSelectedItem().toString());
-		            aluno.setCampus(comboBoxCampus.getSelectedItem().toString());
-		            aluno.setSemestre("2020-1");  // Semestre padrão
 
-		            // Verifica o turno selecionado
-		            String turnoSelecionado = "";
-		            if (rdbtnMatutino.isSelected()) {
-		                turnoSelecionado = "Matutino";
-		            } else if (rdbtnVespertino.isSelected()) {
-		                turnoSelecionado = "Vespertino";
-		            } else if (rdbtnNoturno.isSelected()) {
-		                turnoSelecionado = "Noturno";
-		            } else {
-		                throw new Exception("Por favor, selecione um turno.");
-		            }
+			        	
+			        	try {
+				            Aluno aluno = new Aluno();
+				            aluno.setNome(txtNomeDados.getText());
+				            aluno.setRGM(txtRgmDados.getText());
+				            aluno.setDataNasc(txtDataNasc.getText());
+				            aluno.setCPF(txtCpfDados.getText());
+				            aluno.setEmail(txtEmailDados.getText());
+				            aluno.setEndereco(txtEnderecoDados.getText());
+				            aluno.setMunicipio(txtMuniDados.getText());
+				            aluno.setUF(comboUFDados.getSelectedItem().toString());
+				            aluno.setTelefone(txtTeleDados.getText());
+				            aluno.setCurso(comboBoxCurso.getSelectedItem().toString());
+				            aluno.setCampus(comboBoxCampus.getSelectedItem().toString());
+				            aluno.setSemestre("2020-1");  // Semestre padrão
 
-		            aluno.setPeriodo(turnoSelecionado);
+				            // Verifica o turno selecionado
+				            String turnoSelecionado = "";
+				            if (rdbtnMatutino.isSelected()) {
+				                turnoSelecionado = "Matutino";
+				            } else if (rdbtnVespertino.isSelected()) {
+				                turnoSelecionado = "Vespertino";
+				            } else if (rdbtnNoturno.isSelected()) {
+				                turnoSelecionado = "Noturno";
+				            } else {
+				                throw new Exception("Por favor, selecione um turno.");
+				            }
+							 if (txtNomeDados.getText().equals("") ||txtRgmDados.getText().equals("") || txtCpfDados.getText().equals("   .   .   -  ")|| txtDataNasc.getText().equals("")||txtEmailDados.getText().equals("")||
+						        		txtTeleDados.getText().equals("")||txtEnderecoDados.getText().equals("") ||
+						        		txtMuniDados.getText().equals("")||comboUFDados.getSelectedItem().equals("UF")||
+						        		comboBoxCurso.getSelectedItem().equals("")||
+						        		comboBoxCampus.getSelectedItem().equals("")|| rdbtnMatutino.isSelected() == false && rdbtnVespertino.isSelected() == false && rdbtnNoturno.isSelected() == false) {
+						        	JOptionPane.showMessageDialog(null, "Nada pode ser nulo");
+						        	
+						        } else {
 
-		            // Salvar no banco
-		            AlunoDAO dao = new AlunoDAO();
-		            dao.salvar(aluno);
+				            aluno.setPeriodo(turnoSelecionado);
 
-		            JOptionPane.showMessageDialog(null, "Aluno salvo com sucesso!");
+				            // Salvar no banco
+				            AlunoDAO dao = new AlunoDAO();
+				            dao.salvar(aluno);
 
-		        } catch (Exception ex) {
-		            JOptionPane.showMessageDialog(null, "Erro ao salvar aluno: " + ex.getMessage());
-		        }
-		    }
+				            JOptionPane.showMessageDialog(null, "Aluno salvo com sucesso!");
+						        }
+				        } catch (Exception ex) {
+				            JOptionPane.showMessageDialog(null, "Erro ao salvar aluno: " + ex.getMessage());
+				        }
+			        	
+			        }
+				
 		});
 		
 		mntmNewMenuItem.setHorizontalTextPosition(SwingConstants.LEFT);
