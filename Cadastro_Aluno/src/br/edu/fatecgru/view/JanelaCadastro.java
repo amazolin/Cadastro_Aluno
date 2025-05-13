@@ -134,11 +134,11 @@ public class JanelaCadastro extends JFrame {
 		        // Adiciona os nomes dos participantes
 		        panel.add(Box.createVerticalStrut(10)); // Espaço
 		        panel.add(new JLabel("Participantes do grupo:"));
-		        panel.add(new JLabel("• Danilo Zamai"));
-		        panel.add(new JLabel("• Lucas Silva Contieri"));
+		        panel.add(new JLabel("• Danilo Zamai | Lucas Silva Contieri | Mateus Picoli | Priscila Diniz | Raphael Godek Nunhez "));
+		        /*panel.add(new JLabel("• Lucas Silva Contieri"));
 		        panel.add(new JLabel("• Mateus Picoli"));
 		        panel.add(new JLabel("• Priscila Diniz"));
-		        panel.add(new JLabel("• Raphael Godek Nunhez"));
+		        panel.add(new JLabel("• Raphael Godek Nunhez"));*/
 
 		        JOptionPane.showMessageDialog(null, panel, "Sobre", JOptionPane.INFORMATION_MESSAGE);
 		    }
