@@ -90,6 +90,10 @@ public class JanelaCadastro extends JFrame {
 				
 			
 		public JanelaCadastro() throws Exception {
+			
+		ImageIcon icon = new ImageIcon(getClass().getResource("/imagens/escolhinha.png"));
+		setIconImage(icon.getImage());
+			
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 661, 497);
 		
