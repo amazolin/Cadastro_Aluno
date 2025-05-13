@@ -31,6 +31,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
@@ -117,11 +119,27 @@ public class JanelaCadastro extends JFrame {
 		JMenuItem mntmNewMenuItem_9 = new JMenuItem("Sobre");
 		mntmNewMenuItem_9.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//=====================================
-					JOptionPane.showMessageDialog(null, "Informações do Menu.");
-				//=====================================
-			}
+		        JPanel panel = new JPanel();
+		        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+		        // Carrega a imagem corretamente a partir do classpath
+		        ImageIcon icon = new ImageIcon(getClass().getResource("/imagens/projetoMVC.png"));
+		        JLabel labelImage = new JLabel(icon);
+		        panel.add(labelImage);
+
+		        // Adiciona os nomes dos participantes
+		        panel.add(Box.createVerticalStrut(10)); // Espaço
+		        panel.add(new JLabel("Participantes do grupo:"));
+		        panel.add(new JLabel("• Danilo Zamai"));
+		        panel.add(new JLabel("• Lucas Silva Contieri"));
+		        panel.add(new JLabel("• Mateus Picoli"));
+		        panel.add(new JLabel("• Priscila Diniz"));
+		        panel.add(new JLabel("• Raphael Godek Nunhez"));
+
+		        JOptionPane.showMessageDialog(null, panel, "Sobre", JOptionPane.INFORMATION_MESSAGE);
+		    }
 		});
+		
 		mntmNewMenuItem_9.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UNDEFINED, 0));
 		mntmNewMenuItem_9.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mnNewMenu_2.add(mntmNewMenuItem_9);
@@ -129,6 +147,8 @@ public class JanelaCadastro extends JFrame {
 		contentPane.setPreferredSize(new Dimension(10, 15));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
+		
+		
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
