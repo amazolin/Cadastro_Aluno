@@ -10,14 +10,14 @@ public class ConnectionFactory {
 	    try {
 	        // Verifica se o driver está no classpath
 	        Class.forName("com.mysql.cj.jdbc.Driver");
-	        System.out.println("Driver JDBC carregado com sucesso!"); // Debug
+	        //System.out.println("Driver JDBC carregado com sucesso!"); // Debug
 	        
 	        String url = "jdbc:mysql://localhost:3306/cadastroaluno";
 	        String user = "root";
 	        String senha = "";
 	        
 	        Connection conn = DriverManager.getConnection(url, user, senha);
-	        System.out.println("Conexão estabelecida com sucesso!"); // Debug
+	        //System.out.println("Conexão estabelecida com sucesso!"); // Debug
 	        return conn;
 	    } catch (ClassNotFoundException e) {
 	        throw new Exception("Driver JDBC não encontrado! Verifique o Build Path.", e);

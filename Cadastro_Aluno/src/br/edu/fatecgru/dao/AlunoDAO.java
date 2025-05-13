@@ -50,12 +50,12 @@ public class AlunoDAO {
 	        try (ResultSet rs = ps.executeQuery()) {
 	            while (rs.next()) {
 	                String nomeDisciplina = rs.getString("nome_disciplina");
-	                System.out.println("Disciplina encontrada para o ID " + idCurso + ": " + nomeDisciplina); // LOG
+	                //System.out.println("Disciplina encontrada para o ID " + idCurso + ": " + nomeDisciplina); // LOG
 	                disciplinas.add(nomeDisciplina);
 	            }
 	        }
 	    }
-	    System.out.println("Disciplinas encontradas para o ID " + idCurso + ": " + disciplinas); // LOG
+	    //System.out.println("Disciplinas encontradas para o ID " + idCurso + ": " + disciplinas); // LOG
 	    return disciplinas;
 	}
 	
@@ -72,7 +72,10 @@ public class AlunoDAO {
 		}
 	}
 	
-	// Método Salvar Tela Curso
+	/* ========================================================
+	 *  Metodo salvar Aluno tela Curso
+	 * ========================================================
+	 */
 	
 	public void salvar(Aluno aluno) throws Exception {
 	    // Verificação inicial de dados essenciais
@@ -91,7 +94,7 @@ public class AlunoDAO {
 	                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	    // SQL para inserção do aluno no curso
-	    String SQLCursoAluno = "INSERT INTO tbcurso (aluno_rgm, nome_curso) VALUES (?, ?)";
+	    String SQLCursoAluno = "INSERT INTO tbcurso (aluno_rgm, nome_curso, semestre) VALUES (?, ?, ?)";
 
 	    // SQL para inserir dados na tabela de notas e faltas
 	    String SQLNotaFalta = "INSERT INTO tbnotas_faltas (aluno_rgm, nota, falta, idDisciplina) VALUES (?, ?, ?, ?)";
@@ -118,7 +121,8 @@ public class AlunoDAO {
 	        // Inserção na tabela `tbcurso` (associar aluno ao curso)
 	        try (PreparedStatement psCurso = conn.prepareStatement(SQLCursoAluno)) {
 	            psCurso.setString(1, aluno.getRGM());
-	            psCurso.setString(2, aluno.getCurso()); // Nome do curso do aluno
+	            psCurso.setString(2, aluno.getCurso());
+	            psCurso.setString(3, aluno.getSemestre());
 	            psCurso.executeUpdate();
 	        }
 
@@ -177,10 +181,13 @@ public class AlunoDAO {
 	        }
 	    }
 
-	    System.out.println("Nome do aluno: " + aluno.getNome());
+	    //System.out.println("Nome do aluno: " + aluno.getNome());
 	}
 
-
+	/* ========================================================
+	 *  Metodo pesquisar Aluno tela Curso
+	 * ========================================================
+	 */
 	public Aluno pesquisar(String rgm) throws Exception {
 	    String SQLAluno = "SELECT nome FROM tbaluno WHERE RGM = ?";
 	    String SQLNotaFalta = "SELECT nota, falta FROM tbnotas_faltas WHERE aluno_rgm = ?";
@@ -211,7 +218,7 @@ public class AlunoDAO {
 	            nomeCursoAluno = rsCursoInfo.getString("nome_curso");
 	            aluno.setCurso(nomeCursoAluno);
 	        } else {
-	            System.out.println("Nenhum curso encontrado para o RGM: " + rgm);
+	            //System.out.println("Nenhum curso encontrado para o RGM: " + rgm);
 	            aluno.setIdCurso(0); // Ou algum valor padrão
 	            return aluno; // Se não encontrar o curso, não precisa continuar
 	        }
@@ -223,9 +230,9 @@ public class AlunoDAO {
 	            ResultSet rsCursoId = psCursoId.executeQuery();
 	            if (rsCursoId.next()) {
 	                aluno.setIdCurso(rsCursoId.getInt("idCurso"));
-	                System.out.println("ID do Curso (pelo nome) lido do banco: " + aluno.getIdCurso());
+	                //System.out.println("ID do Curso (pelo nome) lido do banco: " + aluno.getIdCurso());
 	            } else {
-	                System.out.println("ID do Curso não encontrado para o nome: " + nomeCursoAluno);
+	                //System.out.println("ID do Curso não encontrado para o nome: " + nomeCursoAluno);
 	                aluno.setIdCurso(0); // Ou algum valor padrão
 	            }
 	        }
@@ -247,7 +254,7 @@ public class AlunoDAO {
 	    } catch (SQLException sqle) {
 	        throw new Exception("Erro ao buscar aluno: " + sqle.getMessage(), sqle);
 	    }
-	    System.out.println("Nome do aluno: " + aluno.getNome());
+	    //System.out.println("Nome do aluno: " + aluno.getNome());
 	    return aluno;
 	}
 	private int obterDisciplinaId(String nomeDisciplina) throws SQLException {
@@ -264,9 +271,14 @@ public class AlunoDAO {
 	        }
 	    }
 	}
+	
+	/* ========================================================
+	 *  Metodo Salvar Notas
+	 * ========================================================
+	 */
 
 	public void salvarNotas(Aluno aluno) throws Exception {
-	    System.out.println("RGM: " + aluno.getRGM());
+	    //System.out.println("RGM: " + aluno.getRGM());
 
 	    // Verificação inicial de dados essenciais
 	    if (aluno.getRGM() == null || aluno.getRGM().trim().isEmpty()) {
@@ -287,15 +299,15 @@ public class AlunoDAO {
 	    try {
 	        conn.setAutoCommit(false); // Desabilita o auto commit
 
-	        System.out.println("Atualizando notas e faltas...");
-	        System.out.println("RGM: " + aluno.getRGM());
-	        System.out.println("Nota: " + aluno.getNota());
-	        System.out.println("Falta: " + aluno.getFalta());
-	        System.out.println("Disciplina: " + aluno.getDisciplina());
+	        //System.out.println("Atualizando notas e faltas...");
+	        //System.out.println("RGM: " + aluno.getRGM());
+	        //System.out.println("Nota: " + aluno.getNota());
+	        //System.out.println("Falta: " + aluno.getFalta());
+	        //System.out.println("Disciplina: " + aluno.getDisciplina());
 
 	        // Obtendo o ID da disciplina
 	        int disciplinaId = obterDisciplinaId(aluno.getDisciplina());  // Captura o ID da disciplina
-	        System.out.println("ID da Disciplina: " + disciplinaId);
+	        //System.out.println("ID da Disciplina: " + disciplinaId);
 
 	        // Verificando a existência de um registro de notas para o aluno e disciplina
 	        String verificaExistenciaSQL = "SELECT 1 FROM tbnotas_faltas WHERE aluno_rgm = ? AND idDisciplina = ?";
@@ -306,7 +318,7 @@ public class AlunoDAO {
 
 	            // Se o registro não existir, insira-o
 	            if (!rsVerifica.next()) {
-	                System.out.println("Não existe registro para o aluno RGM " + aluno.getRGM() + " e disciplina " + disciplinaId);
+	                //System.out.println("Não existe registro para o aluno RGM " + aluno.getRGM() + " e disciplina " + disciplinaId);
 	                String SQLInserirNotas = "INSERT INTO tbnotas_faltas (aluno_rgm, idDisciplina, nota, falta) VALUES (?, ?, ?, ?)";
 	                try (PreparedStatement psInserirNotas = conn.prepareStatement(SQLInserirNotas)) {
 	                    psInserirNotas.setString(1, aluno.getRGM());
@@ -314,7 +326,7 @@ public class AlunoDAO {
 	                    psInserirNotas.setDouble(3, aluno.getNota()); // nota
 	                    psInserirNotas.setInt(4, aluno.getFalta());
 	                    psInserirNotas.executeUpdate();
-	                    System.out.println("Novo registro inserido com sucesso.");
+	                    //System.out.println("Novo registro inserido com sucesso.");
 	                }
 	            } else {
 	                // Caso o registro exista, atualize as notas e faltas
@@ -325,7 +337,7 @@ public class AlunoDAO {
 	                    psNotasFaltas.setInt(4, disciplinaId);       // idDisciplina
 	                    // Verificando o número de linhas afetadas
 	                    int linhasAfetadas = psNotasFaltas.executeUpdate();
-	                    System.out.println("Linhas afetadas pelo UPDATE: " + linhasAfetadas);
+	                    //System.out.println("Linhas afetadas pelo UPDATE: " + linhasAfetadas);
 	                }
 	            }
 	        }
@@ -361,6 +373,12 @@ public class AlunoDAO {
 	        }
 	    }
 	}
+	
+	/* ========================================================
+	 *  Metodo excluir Aluno
+	 * ========================================================
+	 */
+	
 	public void excluirAluno(String rgm) throws Exception {
 	    if (rgm == null || rgm.trim().isEmpty()) {
 	        throw new Exception("O RGM não pode ser nulo ou vazio");
@@ -381,7 +399,7 @@ public class AlunoDAO {
 	        }
 
 	        conn.commit(); // Confirma exclusão
-	        System.out.println("Aluno com RGM " + rgm + " excluído com sucesso.");
+	        //System.out.println("Aluno com RGM " + rgm + " excluído com sucesso.");
 
 	    } catch (SQLException sqle) {
 	        if (conn != null) {
@@ -404,6 +422,47 @@ public class AlunoDAO {
 	        } 
 	    }
 	}
+	
+	/* ========================================================
+	 *  Metodo Excluir Disciplina
+	 * ========================================================
+	 */	
+	public boolean excluirDisciplina(String rgm, String nomeDisciplina) {
+	    String buscarIdSql = "SELECT idDisciplina FROM tbdisciplinas WHERE nome_disciplina = ?";
+	    String deletarSql = "DELETE FROM tbnotas_faltas WHERE aluno_rgm = ? AND idDisciplina = ?";
+
+	    try (PreparedStatement stmtBuscar = conn.prepareStatement(buscarIdSql)) {
+
+	        stmtBuscar.setString(1, nomeDisciplina);
+	        ResultSet rs = stmtBuscar.executeQuery();
+
+	        if (rs.next()) {
+	            int idDisciplina = rs.getInt("idDisciplina");
+
+	            try (PreparedStatement stmtDeletar = conn.prepareStatement(deletarSql)) {
+	                stmtDeletar.setString(1, rgm);
+	                stmtDeletar.setInt(2, idDisciplina);
+
+	                int linhasAfetadas = stmtDeletar.executeUpdate();
+	                return linhasAfetadas > 0;
+	            }
+
+	        } else {
+	            //System.out.println("Disciplina não encontrada.");
+	            return false;
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
+	/* ========================================================
+	 *  Metodo Buscar Aluno
+	 * ========================================================
+	 */
+	
 	public Aluno buscarDadosAluno(String rgm) throws Exception {
 	    String sql = """
 	        SELECT a.Nome, c.nome_curso, c.semestre
@@ -430,6 +489,11 @@ public class AlunoDAO {
 	        }
 	    }
 	}
+	
+	/* ========================================================
+	 *  Metodo pesquisar Aluno Curso
+	 * ========================================================
+	 */	
 	public Aluno buscarDadosAlunoDados(String rgm) throws Exception {
 	    String sqlDados = "SELECT Nome, Endereco, UF, Telefone, Municipio, DataNasc, CPF, Email, Campus, Turno FROM tbaluno WHERE RGM = ?";
 	    String sqlCurso = "SELECT nome_curso, semestre FROM tbcurso WHERE aluno_rgm = ?";
@@ -472,6 +536,11 @@ public class AlunoDAO {
 	        }
 	    }
 	}
+	
+	/* ========================================================
+	 *  Metodo pesquisar aluno no Boletim
+	 * ========================================================
+	 */
 	public void pesquisarBoletimDoAluno(String rgm, JTable tableBoletim) throws Exception {
 	    // Definindo a consulta SQL para pegar a disciplina, nota e falta
 	    String sql = """
