@@ -1,2 +1,2 @@
-Falta:
-AlunoDAO.java ( Métodos para Java e BD ). Todos ajudam.
+Projeto Cadastro Aluno feito em Java, utilizando a IDE Eclipse.
+Banco de Dados (arquivo existente) em MySQL.
